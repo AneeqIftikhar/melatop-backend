@@ -20,7 +20,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'first_name','last_name','status','role','city', 'email', 'password',
+        'first_name','last_name','status','role','level','city', 'email','phone','country_id','state_id','password',
     ];
 
     /**
@@ -36,7 +36,7 @@ class User extends Authenticatable
         return User::where('email', $email)->first();
     }
     public static function authenticate_user_with_password($email,$password){
-        //return response()->success( Auth::attempt(['email' => $email, 'password' => $password]),'Logged In SuccessFully');
+
         if(Auth::attempt(['email' => $email, 'password' => $password])) {
             $user = Auth::user();
             return $user;

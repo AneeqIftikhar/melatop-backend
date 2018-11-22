@@ -17,10 +17,8 @@ class UserController extends Controller
             'first_name' => 'required|max:100',
             'last_name' => 'required|max:100',
             'email' => 'required|email|max:100',
-            'password' => 'required|max:100',
-            'status' => 'required|max:100',
-            'role' => 'required|max:100',
-            'city' => 'required|max:100',
+            'password' => 'required|max:50',
+            'phone' => 'required|max:100',
         ]);
 
         if ($validator->fails()) {
@@ -33,6 +31,9 @@ class UserController extends Controller
         }
         $input = $request->all();
         $input['password'] = bcrypt($input['password']);
+        $input['status'] = 'registered';
+        $input['role'] = 'advertiser';
+        $input['level'] = '1';
         $user = User::create($input);
         if($user)
         {
