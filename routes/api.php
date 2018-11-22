@@ -22,7 +22,7 @@ Route::group(['middleware' => ['cors']], function () {
 
     Route::post('login','UserController@login');
     Route::post('register','UserController@register');
-
+    Route::resource('stories' , 'StoriesController');
     // Route::group(['middleware' => ['auth:api']], function () {
         
     // });
