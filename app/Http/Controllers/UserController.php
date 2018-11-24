@@ -55,7 +55,7 @@ class UserController extends Controller
             }
             $user['token']=$response_token->access_token;
             $user['refresh_token']=$response_token->refresh_token;
-
+            $user['bank']=$user->userbanks()->first();
             return response()->success($user,'User Registered Successfully');
         }
 
@@ -100,7 +100,7 @@ class UserController extends Controller
             $user['token']=$response_token->access_token;
             $user['refresh_token']=$response_token->refresh_token;
             $user['expire_time']=$response_token->expires_in;
-
+            $user['bank']=$user->userbanks()->first();
             return response()->success($user,'Logged In SuccessFully');
         }
         else
@@ -129,6 +129,7 @@ class UserController extends Controller
         $input['phone'] = 'melatop';
         $input['city'] = 'melatop';
         $user = User::create($input);
+        
         if($user)
         {
             return response()->success([],'Dummy Admin Created Successfully');
@@ -165,6 +166,7 @@ class UserController extends Controller
             }
            
             $user->update($input);
+            $user['bank']=$user->userbanks()->first();
             return response()->success($user,'User Updated Successfully');
         }
         else {
