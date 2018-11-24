@@ -1,6 +1,6 @@
 <?php
 
-namespace Melatop;
+namespace Melatop\Model;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -25,7 +25,7 @@ class Banks extends Model
      */
     public function payments()
     {
-        return $this->hasMany('Melatop\Payment');
+        return $this->hasMany('Melatop\Model\Payment');
     }
 
     /**

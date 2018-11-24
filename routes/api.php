@@ -27,6 +27,7 @@ Route::group(['middleware' => ['cors']], function () {
     
     Route::group(['middleware' => ['auth:api']], function () {
         Route::resource('stories' , 'StoriesController');
+        Route::resource('saved_links' , 'SavedLinksController');
     });
 
 });

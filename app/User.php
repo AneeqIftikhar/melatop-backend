@@ -41,7 +41,7 @@ class User extends Authenticatable
      */
     public function bank()
     {
-        return $this->belongsTo('Melatop\Bank');
+        return $this->belongsTo('Melatop\Model\Bank');
     }
 
     /**
@@ -49,7 +49,7 @@ class User extends Authenticatable
      */
     public function country()
     {
-        return $this->belongsTo('Melatop\Country');
+        return $this->belongsTo('Melatop\Model\Country');
     }
 
     /**
@@ -57,7 +57,7 @@ class User extends Authenticatable
      */
     public function state()
     {
-        return $this->belongsTo('Melatop\State');
+        return $this->belongsTo('Melatop\Model\State');
     }
 
     /**
@@ -65,7 +65,7 @@ class User extends Authenticatable
      */
     public function links()
     {
-        return $this->hasMany('Melatop\Link');
+        return $this->hasMany('Melatop\Model\Links');
     }
 
     /**
@@ -73,10 +73,16 @@ class User extends Authenticatable
      */
     public function payments()
     {
-        return $this->hasMany('Melatop\Payment');
+        return $this->hasMany('Melatop\Model\Payments');
     }
 
-
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function savedLinks()
+    {
+        return $this->hasMany('Melatop\Model\SavedLinks');
+    }
 
 
 

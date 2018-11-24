@@ -1,6 +1,6 @@
 <?php
 
-namespace Melatop;
+namespace Melatop\Model;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -28,7 +28,7 @@ class Payments extends Model
      */
     public function bank()
     {
-        return $this->belongsTo('Melatop\Bank');
+        return $this->belongsTo('Melatop\Model\Bank');
     }
 
     /**

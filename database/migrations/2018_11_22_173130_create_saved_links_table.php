@@ -17,6 +17,9 @@ class CreateSavedLinksTable extends Migration
             $table->increments('id');
             $table->integer('stories_id')->unsigned();
             $table->foreign('stories_id')->references('id')->on('stories')->onDelete('cascade');
+
+            $table->integer('user_id')->unsigned();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });
     }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Melatop;
+namespace Melatop\Model;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -33,7 +33,7 @@ class MyLinks extends Model
      */
     public function story()
     {
-        return $this->belongsTo('Melatop\Story', 'stories_id');
+        return $this->belongsTo('Melatop\Model\Story', 'stories_id');
     }
 
     /**

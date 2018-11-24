@@ -3,7 +3,9 @@
 namespace Melatop\Http\Controllers;
 
 use Illuminate\Http\Request;
-
+use Melatop\Model\SavedLinks;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 class SavedLinksController extends Controller
 {
     /**
@@ -13,18 +15,11 @@ class SavedLinksController extends Controller
      */
     public function index()
     {
-        //
+        $user=Auth::user();
+        $links = SavedLinks::with('story')->where('user_id',$user->id)->get();
+        return response()->success($links,'Saved Links Fetched Successfully');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -34,7 +29,17 @@ class SavedLinksController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(),  [
+            'stories_id' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->fail($validator->errors());
+        }
+        $user=Auth::user();
+        $input = $request->all();
+        $user->savedLinks()->create($input);
+        return response()->success([],'Link Saved Successfully');
     }
 
     /**
@@ -48,16 +53,6 @@ class SavedLinksController extends Controller
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
 
     /**
      * Update the specified resource in storage.

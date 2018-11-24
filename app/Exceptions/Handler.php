@@ -1,10 +1,12 @@
 <?php
 
 namespace Melatop\Exceptions;
-
 use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Auth\AuthenticationException;
 
+use Illuminate\Database\QueryException;
+use Symfony\Component\Debug\Exception\FatalThrowableError;
 class Handler extends ExceptionHandler
 {
     /**

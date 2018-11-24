@@ -1,6 +1,6 @@
 <?php
 
-namespace Melatop;
+namespace Melatop\Model;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -17,12 +17,19 @@ class SavedLinks extends Model
      * @var array
      */
     protected $fillable = ['stories_id', 'created_at', 'updated_at'];
-
+    protected $guarded = ['id','user_id'];
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function story()
     {
-        return $this->belongsTo('Melatop\Story', 'stories_id');
+        return $this->belongsTo('Melatop\Model\Stories', 'stories_id');
+    }
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function user()
+    {
+        return $this->belongsTo('Melatop\User');
     }
 }
