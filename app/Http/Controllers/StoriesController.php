@@ -27,7 +27,7 @@ class StoriesController extends Controller
             
             array_push($category,$value);
         }
-        return response()->success(['stories'=>$stories,'category'=>$category],'Story Fetched Successfully');
+        return response()->success(['stories'=>$stories,'categories'=>$category],'Story Fetched Successfully');
     }
 
 
