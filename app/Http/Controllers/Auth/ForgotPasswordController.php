@@ -4,7 +4,10 @@ namespace Melatop\Http\Controllers\Auth;
 
 use Melatop\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
-
+use Illuminate\Http\Request;
+use Melatop\User;
+use Melatop\Helpers\Email;
+use Illuminate\Support\Facades\Mail;
 class ForgotPasswordController extends Controller
 {
     /*
@@ -28,5 +31,20 @@ class ForgotPasswordController extends Controller
     public function __construct()
     {
         $this->middleware('guest');
+    }
+
+    public function getResetToken(Request $request)
+    {
+        $this->validate($request, ['email' => 'required|email']);
+
+        $user = User::where('email', $request->input('email'))->first();
+        if (!$user) {
+            return response()->fail('User Not Found');
+        }
+        $token = $this->broker()->createToken($user);
+        $data=array('token'=>$token, 'email' => $user->email,'name'=>$user->first_name);
+        Email::sendMail('emails/forgot_password',array('data' => $data), "FORGOT PASSWORD",$user->email);
+        return response()->success([],'Email Sent Successfully');
+
     }
 }

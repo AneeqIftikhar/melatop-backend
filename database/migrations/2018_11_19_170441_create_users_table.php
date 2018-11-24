@@ -25,13 +25,7 @@ class CreateUsersTable extends Migration
                 $table->string('level','25');
                 $table->string('city','100')->nullable();
                 $table->string('image','100')->nullable();
-                $table->integer('country_id')->unsigned()->nullable();
-                $table->foreign('country_id')->references('id')->on('country')->onDelete('cascade');
-                $table->integer('state_id')->unsigned()->nullable();
-                $table->foreign('state_id')->references('id')->on('state')->onDelete('cascade');
-                $table->integer('bank_id')->unsigned()->nullable();
-                $table->foreign('bank_id')->references('id')->on('banks')->onDelete('cascade');
-                $table->string('account','100')->nullable();
+                $table->integer('state_id')->nullable();
                 $table->softDeletes();
                 $table->rememberToken();
                 $table->timestamps();

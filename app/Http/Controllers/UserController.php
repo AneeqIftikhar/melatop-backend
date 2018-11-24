@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 use Melatop\Client;
+use Melatop\Helpers\Helper;
 class UserController extends Controller
 {
     public function register(Request $request)
@@ -131,6 +132,67 @@ class UserController extends Controller
         if($user)
         {
             return response()->success([],'Dummy Admin Created Successfully');
+        }
+
+    }
+
+
+
+    public function update_user(Request $request)
+    {
+         $validator = Validator::make($request->all(),  [
+            'first_name' => 'max:100',
+            'last_name' => 'max:100',
+            'email' => 'email|max:100',
+            'phone' => 'max:100',
+            'city' => 'max:100',
+            'image' => 'image|mimes:jpg,png,jpeg|max:2048',
+            'account' => 'max:100',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->fail($validator->errors());
+        }
+        $input=$request->all();
+        $user=Auth::user();
+        if($user) {
+            if($request->has('image'))
+            {
+                if($name=Helper::uploadImage($request->image))
+                {
+                    $input['image']=$name;
+                }
+            }
+           
+            $user->update($input);
+            return response()->success($user,'User Updated Successfully');
+        }
+        else {
+            return response()->fail("User Update Failed");
+        }       
+
+    }
+    public function change_password(Request $request)
+    {
+         $validator = Validator::make($request->all(),  [
+            'password' => 'required|max:100',
+            'old_password' => 'required|max:100',
+            'email' => 'required|email|max:100'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->fail($validator->errors());
+        }
+        $input=$request->all();
+        if($user=User::authenticate_user_with_password($input['email'] , $input['old_password']))
+        {
+            $input['password']=bcrypt($input['password']);
+            $user->update(['password'=>$input['password']]);
+            return response()->success([],'Password Updated Successfully');
+        }
+        else
+        {
+            return response()->fail("Old Password Wrong");
         }
 
     }

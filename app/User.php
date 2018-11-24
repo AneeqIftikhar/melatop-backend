@@ -19,7 +19,7 @@ class User extends Authenticatable
      * @var string
      */
     protected $table = 'users';
-
+    protected $appends = ['image_url'];
     /**
      * @var array
      */
@@ -41,7 +41,7 @@ class User extends Authenticatable
      */
     public function bank()
     {
-        return $this->belongsTo('Melatop\Model\Bank');
+        return $this->belongsTo('Melatop\Model\Banks');
     }
 
     /**
@@ -85,6 +85,15 @@ class User extends Authenticatable
     }
 
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function userbanks()
+    {
+        return $this->hasMany('Melatop\Model\UserBanks');
+    }
+
+
 
 
     public static function get_user_from_email($email){
@@ -100,5 +109,14 @@ class User extends Authenticatable
             return false;
         }
 
+    }
+    public function getImageUrlAttribute()
+    {
+       if($this->image)
+       {
+           $base = config('app.url');
+           return $base.$this->image;
+       }
+       return null;
     }
 }
