@@ -15,8 +15,19 @@ class StoriesController extends Controller
      */
     public function index()
     {
-         $stories = Stories::all();
-         return response()->success($stories,'Story Fetched Successfully');
+        $stories = Stories::all();
+        $values=array();
+        $category=array();
+        foreach ($stories as $story) {
+            
+            array_push($values,$story->category);
+        }
+        $values = array_unique($values);
+        foreach ($values as $value) {
+            
+            array_push($category,$value);
+        }
+        return response()->success(['stories'=>$stories,'category'=>$category],'Story Fetched Successfully');
     }
 
 
