@@ -33,7 +33,8 @@ class UserBanksController extends Controller
         	$banks=$user->userbanks()->get();
         	$banks[0]->update($input);
         }
-       	return response()->success([],'Banks Information Updated Successfully');
+        $user['bank']=$user->userbanks()->first();
+       	return response()->success($user,'Banks Information Updated Successfully');
 
     }
 }
