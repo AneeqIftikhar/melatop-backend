@@ -63,9 +63,9 @@ class User extends Authenticatable
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function links()
+    public function mylinks()
     {
-        return $this->hasMany('Melatop\Model\Links');
+        return $this->hasMany('Melatop\Model\MyLinks');
     }
 
     /**

@@ -33,7 +33,7 @@ class MyLinks extends Model
      */
     public function story()
     {
-        return $this->belongsTo('Melatop\Model\Story', 'stories_id');
+        return $this->belongsTo('Melatop\Model\Stories', 'stories_id');
     }
 
     /**

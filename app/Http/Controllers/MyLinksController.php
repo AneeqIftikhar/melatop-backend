@@ -3,7 +3,9 @@
 namespace Melatop\Http\Controllers;
 
 use Illuminate\Http\Request;
-
+use Melatop\Model\MyLinks;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 class MyLinksController extends Controller
 {
     /**
@@ -13,18 +15,11 @@ class MyLinksController extends Controller
      */
     public function index()
     {
-        //
+        $user=Auth::user();
+        $links = MyLinks::with('story')->where('user_id',$user->id)->get();
+        return response()->success($links,'My Links Fetched Successfully');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -34,7 +29,17 @@ class MyLinksController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(),  [
+            'stories_id' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->fail($validator->errors());
+        }
+        $user=Auth::user();
+        $input = $request->all();
+        $user->mylinks()->create($input);
+        return response()->success([],'Link Added Successfully');
     }
 
     /**
@@ -44,17 +49,6 @@ class MyLinksController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
     {
         //
     }
