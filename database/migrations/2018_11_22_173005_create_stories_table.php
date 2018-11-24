@@ -19,6 +19,7 @@ class CreateStoriesTable extends Migration
             $table->string('link','100');
             $table->string('image','50');
             $table->string('title','100');
+            $table->integer('created_by')->nullable();
             $table->timestamps();
         });
     }

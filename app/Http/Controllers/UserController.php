@@ -109,4 +109,29 @@ class UserController extends Controller
 
 
     }
+    public function create_dummy_admin(Request $request)
+    {
+        
+        $user = User::get_user_from_email('admin@melatop.com');
+        if($user)
+        {
+            return response()->fail('Email Already Registered');
+        }
+        $input = [];
+        $input['email'] = 'admin@melatop.com';
+        $input['password'] = bcrypt('melatop123');
+        $input['status'] = 'registered';
+        $input['role'] = 'admin';
+        $input['level'] = '1';
+        $input['first_name'] = 'admin';
+        $input['last_name'] = 'melatop';
+        $input['phone'] = 'melatop';
+        $input['city'] = 'melatop';
+        $user = User::create($input);
+        if($user)
+        {
+            return response()->success([],'Dummy Admin Created Successfully');
+        }
+
+    }
 }

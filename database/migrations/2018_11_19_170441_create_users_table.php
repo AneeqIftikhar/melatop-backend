@@ -29,6 +29,9 @@ class CreateUsersTable extends Migration
                 $table->foreign('country_id')->references('id')->on('country')->onDelete('cascade');
                 $table->integer('state_id')->unsigned()->nullable();
                 $table->foreign('state_id')->references('id')->on('state')->onDelete('cascade');
+                $table->integer('bank_id')->unsigned()->nullable();
+                $table->foreign('bank_id')->references('id')->on('banks')->onDelete('cascade');
+                $table->string('account','100')->nullable();
                 $table->softDeletes();
                 $table->rememberToken();
                 $table->timestamps();

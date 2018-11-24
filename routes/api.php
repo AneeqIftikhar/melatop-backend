@@ -22,9 +22,11 @@ Route::group(['middleware' => ['cors']], function () {
 
     Route::post('login','UserController@login');
     Route::post('register','UserController@register');
-    Route::resource('stories' , 'StoriesController');
-    // Route::group(['middleware' => ['auth:api']], function () {
-        
-    // });
+
+    Route::get('create_admin','UserController@create_dummy_admin');
+    
+    Route::group(['middleware' => ['auth:api']], function () {
+        Route::resource('stories' , 'StoriesController');
+    });
 
 });

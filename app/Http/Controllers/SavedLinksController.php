@@ -3,10 +3,8 @@
 namespace Melatop\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Melatop\Model\Stories;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Validator;
-class StoriesController extends Controller
+
+class SavedLinksController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,10 +13,18 @@ class StoriesController extends Controller
      */
     public function index()
     {
-         $stories = Stories::all();
-         return response()->success($stories,'Story Fetched Successfully');
+        //
     }
 
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        //
+    }
 
     /**
      * Store a newly created resource in storage.
@@ -28,24 +34,7 @@ class StoriesController extends Controller
      */
     public function store(Request $request)
     {
-        $user=Auth::user();
-        if($user->role=='admin')
-        {
-            $validator = Validator::make($request->all(),  [
-                'category' => 'required|max:30',
-                'link' => 'required|max:100',
-                'image' => 'required|max:50',
-                'title' => 'required|max:100',
-            ]);
-
-            if ($validator->fails()) {
-                return response()->fail($validator->errors());
-            }
-            $input = $request->all();
-            $stories = Stories::create($input);
-            return response()->success($stories,'Story Created Successfully');
-        }
-        
+        //
     }
 
     /**
@@ -55,6 +44,17 @@ class StoriesController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show($id)
+    {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit($id)
     {
         //
     }

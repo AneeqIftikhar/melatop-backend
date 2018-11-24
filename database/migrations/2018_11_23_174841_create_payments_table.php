@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateMyLinksTable extends Migration
+class CreatePaymentsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,15 @@ class CreateMyLinksTable extends Migration
      */
     public function up()
     {
-        Schema::create('links', function (Blueprint $table) {
+        Schema::create('payments', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('views_count')->default(0);
+            $table->integer('amount');
             $table->integer('user_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->integer('stories_id')->unsigned();
-            $table->foreign('stories_id')->references('id')->on('stories')->onDelete('cascade');
+            $table->date('date');
+            $table->string('status','25');
+            $table->integer('bank_id')->unsigned()->nullable();
+            $table->foreign('bank_id')->references('id')->on('banks')->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -31,6 +33,6 @@ class CreateMyLinksTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('my_links');
+        Schema::dropIfExists('payments');
     }
 }

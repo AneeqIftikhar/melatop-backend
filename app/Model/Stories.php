@@ -3,7 +3,7 @@
 namespace Melatop\Model;
 
 use Illuminate\Database\Eloquent\Model;
-
+use Illuminate\Support\Facades\Auth;
 /**
  * @property int $id
  * @property string $category
@@ -20,4 +20,14 @@ class Stories extends Model
      */
     protected $fillable = ['category', 'link', 'image', 'title', 'created_at', 'updated_at'];
 
+    protected $guarded = ['id','created_by'];
+    public static function boot() {
+        parent::boot();
+
+        // create a event to happen on saving
+        static::creating(function($table)  {
+            $table->created_by = Auth::user()->id;
+        });
+
+	}
 }

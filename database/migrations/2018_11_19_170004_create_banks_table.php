@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateSavedLinksTable extends Migration
+class CreateBanksTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,10 @@ class CreateSavedLinksTable extends Migration
      */
     public function up()
     {
-        Schema::create('saved_links', function (Blueprint $table) {
+        Schema::create('banks', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('stories_id')->unsigned();
-            $table->foreign('stories_id')->references('id')->on('stories')->onDelete('cascade');
+            $table->string('name','100');
+            $table->string('short','25');
             $table->timestamps();
         });
     }
@@ -28,6 +28,6 @@ class CreateSavedLinksTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('saved_links');
+        Schema::dropIfExists('banks');
     }
 }
