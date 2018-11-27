@@ -38,7 +38,7 @@ class UserController extends Controller
         $input['password'] = bcrypt($input['password']);
         $input['status'] = 'registered';
         $input['role'] = 'advertiser';
-        $input['level'] = '1';
+        $input['level'] = 'beginner';
         $user = User::create($input);
         if($user)
         {
@@ -143,6 +143,11 @@ class UserController extends Controller
            
         }
         
+        $settings=Settings::all();
+        if(count($settings)==0)
+        {
+            Settings::create([]);
+        }
         
          return response()->success([],'Dummy Data Added Successfully');
 
@@ -219,11 +224,11 @@ class UserController extends Controller
         $user=Auth::user();
         $settings=Settings::first();
         $user_rate=0;
-        if($user->role=="beginner")
+        if($user->level=="beginner")
         {
             $user_rate=$settings->beginner_rate;
         }
-        else if($user->role=="intermediate")
+        else if($user->level=="intermediate")
         {
             $user_rate=$settings->intermediate_rate;
         }
@@ -257,8 +262,8 @@ class UserController extends Controller
 
         $result['today_web']=$yesterday_visits;
         $result['today_ios']=$month_visits;
-        $result['today_android']=$year_visits;
-        $result['today_totald']=$year_visits+$month_visits+$yesterday_visits;
+        $result['today_android']=$android;
+        $result['today_total']=$android+$month_visits+$yesterday_visits;
 
 
 
