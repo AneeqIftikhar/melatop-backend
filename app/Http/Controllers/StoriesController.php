@@ -45,7 +45,7 @@ class StoriesController extends Controller
             $validator = Validator::make($request->all(),  [
                 'category' => 'required|max:30',
                 'link' => 'required|max:100',
-                'image' => 'required|max:50',
+                'image' => 'required|max:255',
                 'title' => 'required|max:100',
             ]);
 

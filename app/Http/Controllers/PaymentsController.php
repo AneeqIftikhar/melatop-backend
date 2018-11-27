@@ -3,7 +3,9 @@
 namespace Melatop\Http\Controllers;
 
 use Illuminate\Http\Request;
-
+use Melatop\Model\Payments;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 class PaymentsController extends Controller
 {
     /**
@@ -13,7 +15,36 @@ class PaymentsController extends Controller
      */
     public function index()
     {
-        //
+        $user=Auth::user();
+        $payments=$user->payments();
+        $result=[];
+        if($payments)
+        {
+            
+            
+            $last_paid=$user->payments()->where('status','paid')->first();
+            if($last_paid)
+            {
+                $result['last_paid']=$last_paid->amount;
+            }
+            else
+            {
+                 $result['last_paid']=0;
+            }
+            $pending=$user->payments()->where('status','pending')->get();
+            $pending_amount=0;
+            foreach ($pending as $pending_payments) {
+                $pending_amount=$pending_amount+$pending_payments->amount;
+            }
+            $result['pending_amount']=$pending_amount;
+            $result['history']=$user->payments()->get();
+            return response()->success($result,'Payments Fetched Successfully');
+
+        }
+        // $result['last_paid']=0;
+        // $result['pending_amount']=0;
+        // $result['payments']=[];
+        // return response()->success($result,'Payments Fetched Successfully');
     }
 
     /**
