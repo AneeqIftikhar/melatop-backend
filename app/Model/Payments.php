@@ -28,7 +28,7 @@ class Payments extends Model
      */
     public function bank()
     {
-        return $this->belongsTo('Melatop\Model\Bank');
+        return $this->belongsTo('Melatop\Model\Banks');
     }
 
     /**

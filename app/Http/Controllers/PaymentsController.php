@@ -37,7 +37,7 @@ class PaymentsController extends Controller
                 $pending_amount=$pending_amount+$pending_payments->amount;
             }
             $result['pending_amount']=$pending_amount;
-            $result['history']=$user->payments()->get();
+            $result['history']=$user->payments()->with('bank')->get();
             return response()->success($result,'Payments Fetched Successfully');
 
         }

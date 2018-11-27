@@ -25,7 +25,7 @@ class Banks extends Model
      */
     public function payments()
     {
-        return $this->hasMany('Melatop\Model\Payment');
+        return $this->hasMany('Melatop\Model\Payments');
     }
 
     /**
