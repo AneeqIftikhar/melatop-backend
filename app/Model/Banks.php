@@ -18,7 +18,7 @@ class Banks extends Model
     /**
      * @var array
      */
-    protected $fillable = ['name', 'short', 'created_at', 'updated_at'];
+    protected $fillable = ['id','name', 'short', 'created_at', 'updated_at'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany

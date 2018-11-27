@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 use Melatop\Client;
 use Melatop\Helpers\Helper;
+use Melatop\Model\Banks;
 class UserController extends Controller
 {
     public function register(Request $request)
@@ -114,26 +115,33 @@ class UserController extends Controller
     {
         
         $user = User::get_user_from_email('admin@melatop.com');
-        if($user)
+        if(!$user)
         {
-            return response()->fail('Email Already Registered');
+            $input = [];
+            $input['email'] = 'admin@melatop.com';
+            $input['password'] = bcrypt('melatop123');
+            $input['status'] = 'registered';
+            $input['role'] = 'admin';
+            $input['level'] = '1';
+            $input['first_name'] = 'admin';
+            $input['last_name'] = 'melatop';
+            $input['phone'] = 'melatop';
+            $input['city'] = 'melatop';
+            $user = User::create($input);
         }
-        $input = [];
-        $input['email'] = 'admin@melatop.com';
-        $input['password'] = bcrypt('melatop123');
-        $input['status'] = 'registered';
-        $input['role'] = 'admin';
-        $input['level'] = '1';
-        $input['first_name'] = 'admin';
-        $input['last_name'] = 'melatop';
-        $input['phone'] = 'melatop';
-        $input['city'] = 'melatop';
-        $user = User::create($input);
+        $banks=Banks::all();
+        if(count($banks)==0)
+        {
+            Banks::create(['id'=>'1','name'=>'Dashen Bank', 'short'=>'Dashen Bank']);
+            Banks::create(['id'=>'2','name'=>'Awash International Bank', 'short'=>'AIB']);
+            Banks::create(['id'=>'3','name'=>'Bank of Abyssinia', 'short'=>'BOA']);
+            Banks::create(['id'=>'4','name'=>'Commercial Bank of Ethiopia', 'short'=>'CBE']);
+            Banks::create(['id'=>'5','name'=>'United Bank', 'short'=>'United Bank']);
+           
+        }
         
-        if($user)
-        {
-            return response()->success([],'Dummy Admin Created Successfully');
-        }
+        
+         return response()->success([],'Dummy Data Added Successfully');
 
     }
 

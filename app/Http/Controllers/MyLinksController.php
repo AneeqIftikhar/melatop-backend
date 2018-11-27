@@ -42,6 +42,29 @@ class MyLinksController extends Controller
         return response()->success([],'Link Added Successfully');
     }
 
+    public function add_update_mylinks(Request $request)
+    {
+        $validator = Validator::make($request->all(),  [
+            'stories_id' => 'required',
+            'user_id' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->fail($validator->errors());
+        }
+        $input = $request->all();
+        $link=MyLinks::where('user_id',$input['user_id'])->where('stories_id',$input['stories_id'])->first();
+        if($link)
+        {
+            $views_count=$link->views_count+1;
+            $link->update(['views_count' => $views_count]);
+        }
+        else
+        {
+            MyLinks::create(['user_id'=>$input['user_id'], 'stories_id'=>$input['stories_id'], 'views_count'=>1]);
+        }
+        return response()->success([],'Link Added/updated Successfully');
+    }
     /**
      * Display the specified resource.
      *
