@@ -34,6 +34,8 @@ Route::group(['middleware' => ['cors']], function () {
         Route::resource('payments' , 'PaymentsController');
         Route::post('update_user' , 'UserController@update_user');
         Route::post('add_update_bank_info' , 'UserBanksController@add_update_bank_info');
+        Route::get('dashboard','UserController@dashboard');
+        Route::post('dashboard_date','UserController@dashboard_date');
 
 
     });

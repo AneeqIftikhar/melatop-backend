@@ -11,6 +11,9 @@ use Illuminate\Support\Facades\Route;
 use Melatop\Client;
 use Melatop\Helpers\Helper;
 use Melatop\Model\Banks;
+use Melatop\Model\Settings;
+use Melatop\Model\MyLinks;
+use Carbon\Carbon;
 class UserController extends Controller
 {
     public function register(Request $request)
@@ -205,5 +208,128 @@ class UserController extends Controller
             return response()->fail("Old Password Wrong");
         }
 
+    }
+
+    public function dashboard(Request $request)
+    {
+        $today = Carbon::today();
+        $yesterday=Carbon::yesterday();
+        $Month = $today->month;
+        $Year = $today->year;
+        $user=Auth::user();
+        $settings=Settings::first();
+        $user_rate=0;
+        if($user->role=="beginner")
+        {
+            $user_rate=$settings->beginner_rate;
+        }
+        else if($user->role=="intermediate")
+        {
+            $user_rate=$settings->intermediate_rate;
+        }
+        else
+        {
+            $user_rate=$settings->expert_rate;
+        }
+        $today_visits=$user->visits()->whereDate('created_at',Carbon::today()->toDateString())->count();
+        $yesterday_visits=$user->visits()->whereDate('created_at',Carbon::today()->toDateString())->count();
+
+        $month_visits=$user->visits()->whereYear('created_at',$Year)->whereMonth('created_at',$Month)->count();
+
+        $result=[];
+        $result['today_earning']=$today_visits*$user_rate;
+        $result['yesterday_earning']=$yesterday_visits*$user_rate;
+        $result['month_earning']=$month_visits*$user_rate;
+
+
+
+        $pending=$user->payments()->where('status','!=','paid')->get();
+        $total_balance=0;
+        foreach ($pending as $pending_payments) {
+            $total_balance=$pending_amount+$pending_payments->amount;
+        }
+
+        $result['balance']=$total_balance;
+
+        $web=$user->visits()->whereDate('created_at',Carbon::today()->toDateString())->where('platform','web')->count();
+        $ios=$user->visits()->whereDate('created_at',Carbon::today()->toDateString())->where('platform','ios')->count();
+        $android=$user->visits()->whereDate('created_at',Carbon::today()->toDateString())->where('platform','android')->count();
+
+        $result['today_web']=$yesterday_visits;
+        $result['today_ios']=$month_visits;
+        $result['today_android']=$year_visits;
+        $result['today_totald']=$year_visits+$month_visits+$yesterday_visits;
+
+
+
+        return response()->success($result,'Dashboard Fetched Successfully');
+    }
+
+    public function dashboard_date(Request $request)
+    {
+        $input=$request->all();
+        $month_visits=0;
+        $user=Auth::user();
+        if($input['duration']=='today')
+        {
+            $today = Carbon::today()->toDateString();
+            
+
+            $month_visits=$user->visits()->whereDate('created_at',$today)->sum('rate');
+            $month_clicks=$user->visits()->whereDate('created_at',$today)->count();
+
+            $links=$user->mylinks()->whereDate('created_at',$today)->count();
+
+        }
+        else if($input['duration']=='yesterday')
+        {
+            $yesterday=Carbon::yesterday()->toDateString();
+            $month_visits=$user->visits()->whereDate('created_at',$yesterday)->sum('rate');
+            $month_clicks=$user->visits()->whereDate('created_at',$yesterday)->count();
+             $links=$user->mylinks()->whereDate('created_at',$yesterday)->count();
+        }
+        else if($input['duration']=='this_month')
+        {
+            $today = Carbon::today();
+            $Month = $today->month;
+            $Year = $today->year;
+            $month_visits=$user->visits()->whereYear('created_at',$Year)->whereMonth('created_at',$Month)->sum('rate');
+            $month_clicks=$user->visits()->whereYear('created_at',$Year)->whereMonth('created_at',$Month)->count();
+
+             $links=$user->mylinks()->whereYear('created_at',$Year)->whereMonth('created_at',$Month)->count();
+        }
+        else if($input['duration']=='last_month')
+        {
+            $today = Carbon::today();
+            $Month = $today->month;
+            $Year = $today->year;
+            if($Month==1)
+            {
+                $Month=12;
+                $Year=$Year-1;
+            }
+            else
+            {
+                $Month =$Month -1;
+                $month_visits=$user->visits()->whereYear('created_at',$Year)->whereMonth('created_at',$Month)->sum('rate');
+            }
+            $month_clicks=$user->visits()->whereYear('created_at',$Year)->whereMonth('created_at',$Month)->count();
+
+            $links=$user->mylinks()->whereYear('created_at',$Year)->whereMonth('created_at',$Month)->count();
+
+        }
+
+        $result=[];
+        $result['earnings']=$month_visits;
+        $result['visits']=$month_clicks;
+        $result['links_shared']=$links;
+
+
+        
+        // $result['daily_avg_earning']=($month_visits*$user_rate)/30;
+        // $result['week_avg_earning']=($month_visits*$user_rate)/4;
+
+
+        return response()->success($result,'Dashboard Fetched Successfully');
     }
 }

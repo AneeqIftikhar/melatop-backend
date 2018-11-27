@@ -93,6 +93,11 @@ class User extends Authenticatable
         return $this->hasMany('Melatop\Model\UserBanks');
     }
 
+    public function visits()
+    {
+        return $this->hasMany('Melatop\Model\Visits');
+    }
+
 
 
 
