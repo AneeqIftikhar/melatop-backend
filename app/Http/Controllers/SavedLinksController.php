@@ -38,7 +38,7 @@ class SavedLinksController extends Controller
         }
         $user=Auth::user();
         $input = $request->all();
-        $link=SavedLinks::where('user_id',$input['user_id'])->where('stories_id',$input['stories_id'])->first();
+        $link=SavedLinks::where('user_id',$user->id)->where('stories_id',$input['stories_id'])->first();
         if($link)
         {
             return response()->fail([],'Link Already Saved');
