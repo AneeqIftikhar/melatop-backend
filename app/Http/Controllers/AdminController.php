@@ -13,7 +13,19 @@ class AdminController extends Controller
     	User Management
     	Only Admin Allowed
     */
-
+    public function get_all_users(Request $request)
+    {
+        $user=Auth::user();
+        if($user->role=='admin')
+        {
+            $user=User::all();
+            return response()->success($user,'User Fetched Successfully');
+        }
+        else
+        {
+            return response()->fail("Not Allowed");
+        }
+    }    
     public function change_user_status(Request $request)
     {
     	$user=Auth::user();
@@ -48,6 +60,19 @@ class AdminController extends Controller
     /*
     	Payment Management
     */
+    public function get_all_payments(Request $request)
+    {
+        $user=Auth::user();
+        if($user->role=='admin')
+        {
+            $payments=Payments::all();
+            return response()->success($payments,'Payments Fetched Successfully');
+        }
+        else
+        {
+            return response()->fail("Not Allowed");
+        }
+    }   
     public function add_payment(Request $request)
     {
     	$user=Auth::user();

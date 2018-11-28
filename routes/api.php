@@ -32,10 +32,22 @@ Route::group(['middleware' => ['cors']], function () {
         Route::resource('my_links' , 'MyLinksController');
         Route::resource('banks' , 'BanksController');
         Route::resource('payments' , 'PaymentsController');
+        Route::resource('facebook_pages' , 'FacebookPagesController');
         Route::post('update_user' , 'UserController@update_user');
         Route::post('add_update_bank_info' , 'UserBanksController@add_update_bank_info');
         Route::get('dashboard','UserController@dashboard');
         Route::post('dashboard_date','UserController@dashboard_date');
+
+
+        //admin
+        Route::get('get_all_payments','AdminController@get_all_payments');
+        Route::get('get_all_users','AdminController@get_all_users');
+
+        Route::post('change_user_status' , 'AdminController@change_user_status');
+        Route::post('change_payment_status' , 'AdminController@update_user');
+        Route::post('add_payment' , 'AdminController@add_payment');
+
+
 
 
     });

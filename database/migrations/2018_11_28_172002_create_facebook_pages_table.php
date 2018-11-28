@@ -15,7 +15,12 @@ class CreateFacebookPagesTable extends Migration
     {
         Schema::create('facebook_pages', function (Blueprint $table) {
             $table->increments('id');
-            
+            $table->string('access_token','512')->nullable();
+            $table->string('category','100')->nullable();
+            $table->string('page_id','100')->nullable();
+            $table->string('name','255')->nullable();
+            $table->integer('user_id')->unsigned();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });
     }

@@ -19,6 +19,9 @@ class FacebookPagesController extends Controller
     {
         $validator = Validator::make($request->all(),  [
             'name' => 'required|255',
+            'access_token'=> 'required|512',
+            'category'=> 'required|100', 
+            'page_id'=> 'required|100',
         ]);
 
         if ($validator->fails()) {

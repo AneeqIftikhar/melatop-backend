@@ -82,30 +82,38 @@ class UserController extends Controller
         }
         else if($user=User::authenticate_user_with_password(request('email') , request('password')))
         {
-            $userTokens=$user->tokens;
-            foreach($userTokens as $token) {
-                $token->delete();
-            }
-            $client = Client::where('password_client', 1)->first();
-            $request->request->add([
-                'client_id' => $client->id,
-                'client_secret' => $client->secret,
-                'grant_type' => 'password',
-                'username' => request('email')
-            ]);
-            $tokenRequest = Request::create('/oauth/token', 'POST', $request->all());
-
-            $response_token =  Route::dispatch($tokenRequest);
-            $response_token = json_decode($response_token->getContent());
-            if(isset($response_token->error))
+            if($user->status=='blocked')
             {
-                return response()->fail('Incorrect Email Or Password');
+                return response()->fail('User is Blocked');
             }
-            $user['token']=$response_token->access_token;
-            $user['refresh_token']=$response_token->refresh_token;
-            $user['expire_time']=$response_token->expires_in;
-            $user['bank']=$user->userbanks()->first();
-            return response()->success($user,'Logged In SuccessFully');
+            else
+            {
+                 $userTokens=$user->tokens;
+                foreach($userTokens as $token) {
+                    $token->delete();
+                }
+                $client = Client::where('password_client', 1)->first();
+                $request->request->add([
+                    'client_id' => $client->id,
+                    'client_secret' => $client->secret,
+                    'grant_type' => 'password',
+                    'username' => request('email')
+                ]);
+                $tokenRequest = Request::create('/oauth/token', 'POST', $request->all());
+
+                $response_token =  Route::dispatch($tokenRequest);
+                $response_token = json_decode($response_token->getContent());
+                if(isset($response_token->error))
+                {
+                    return response()->fail('Incorrect Email Or Password');
+                }
+                $user['token']=$response_token->access_token;
+                $user['refresh_token']=$response_token->refresh_token;
+                $user['expire_time']=$response_token->expires_in;
+                $user['bank']=$user->userbanks()->first();
+                return response()->success($user,'Logged In SuccessFully');
+            }
+           
         }
         else
         {
