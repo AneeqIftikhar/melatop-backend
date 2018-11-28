@@ -43,10 +43,10 @@ class StoriesController extends Controller
         if($user->role=='admin')
         {
             $validator = Validator::make($request->all(),  [
-                'category' => 'required|max:30',
-                'link' => 'required|max:100',
+                'category' => 'required|max:50',
+                'link' => 'required|max:255',
                 'image' => 'required|max:255',
-                'title' => 'required|max:100',
+                'title' => 'required|max:255',
             ]);
 
             if ($validator->fails()) {

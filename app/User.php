@@ -98,6 +98,10 @@ class User extends Authenticatable
         return $this->hasMany('Melatop\Model\Visits');
     }
 
+    public function facebook_pages()
+    {
+        return $this->hasMany('Melatop\Model\FacebookPages');
+    }
 
 
 
