@@ -4,6 +4,7 @@ namespace Melatop\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Melatop\Model\Notifications;
+use Illuminate\Support\Facades\Validator;
 use Melatop\User;
 use Illuminate\Support\Facades\Auth;
 class NotificationsController extends Controller
