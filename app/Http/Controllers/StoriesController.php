@@ -54,6 +54,7 @@ class StoriesController extends Controller
             $title = "";
             $description = "";
             $img = "";
+            $category="";
             if(isset($tags["title"])){
                 $title = $tags["title"];
             }
@@ -76,9 +77,16 @@ class StoriesController extends Controller
                 $img = $tags["twitter:image"];
             }
 
+             if(isset($tags["category"])){
+                $category = $tags["category"];
+            }else{
+                $category= "Undefined";
+            }
+
             $input['image']=$img;
             $input['title']=$title;
-            $input['category']= "Undefined";
+
+            $input['category']= $category;
             
             $stories = Stories::create($input);
             return response()->success($stories,'Story Created Successfully');
