@@ -43,16 +43,43 @@ class StoriesController extends Controller
         if($user->role=='admin')
         {
             $validator = Validator::make($request->all(),  [
-                'category' => 'required|max:50',
                 'link' => 'required|max:255',
-                'image' => 'required|max:255',
-                'title' => 'required|max:255',
             ]);
 
             if ($validator->fails()) {
                 return response()->fail($validator->errors());
             }
             $input = $request->all();
+            $tags = get_meta_tags($input['link']);
+            $title = "";
+            $description = "";
+            $img = "";
+            if(isset($tags["title"])){
+                $title = $tags["title"];
+            }
+
+            if(isset($tags["twitter:title"])){
+                $title = $tags["twitter:title"];
+            }
+
+            if(isset($tags["description"])){
+                $description = $tags["description"];
+            }
+
+            if(isset($tags["twitter:description"])){
+                $description = $tags["twitter:description"];
+            }
+
+            if(isset($tags["twitter:image:src"])){
+                $img = $tags["twitter:image:src"];
+            }else if(isset($tags["twitter:image"])){
+                $img = $tags["twitter:image"];
+            }
+
+            $input['image']=$img;
+            $input['title']=$title;
+            $input['category']= "Undefined";
+            
             $stories = Stories::create($input);
             return response()->success($stories,'Story Created Successfully');
         }

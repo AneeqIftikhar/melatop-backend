@@ -82,9 +82,9 @@ class UserController extends Controller
         }
         else if($user=User::authenticate_user_with_password(request('email') , request('password')))
         {
-            if($user->status=='blocked')
+            if($user->status=='banned')
             {
-                return response()->fail('User is Blocked');
+                return response()->fail('User is Banned');
             }
             else
             {
