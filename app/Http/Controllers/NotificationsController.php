@@ -75,7 +75,7 @@ class NotificationsController extends Controller
 			{
 				$all = array();
 				foreach ($users as $user) {
-					$row=['title'=>$input['title'],'description'=>$input['description'],'type'=>$input['type'],'user_id'=>$user->id];
+					$row=['title'=>$input['title'],'description'=>$input['description'],'type'=>$input['type'],'user_id'=>$user->id,'status'=>'unread'];
 					array_push($all,$row);
 				}
 
