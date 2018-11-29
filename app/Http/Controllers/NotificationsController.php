@@ -56,19 +56,19 @@ class NotificationsController extends Controller
 	            }
 	            else if($input['send_to']=='active')
 	            {
-	            	$users=User::where('status','active');
+	            	$users=User::where('status','active')->get();
 	            }
 	            else if($input['send_to']=='beginner')
 	            {
-	            	$users=User::where('role','beginner');
+	            	$users=User::where('role','beginner')->get();
 	            }
 	            else if($input['send_to']=='intermediate')
 	            {
-	            	$users=User::where('role','intermediate');
+	            	$users=User::where('role','intermediate')->get();
 	            }
 	            else if($input['send_to']=='expert')
 	            {
-	            	$users=User::where('role','expert');
+	            	$users=User::where('role','expert')->get();
 	            }
 			}
 			if(count($users)>0)
