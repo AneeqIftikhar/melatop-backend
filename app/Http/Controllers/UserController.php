@@ -14,6 +14,7 @@ use Melatop\Model\Banks;
 use Melatop\Model\Settings;
 use Melatop\Model\MyLinks;
 use Carbon\Carbon;
+use Melatop\Model\Banks;
 class UserController extends Controller
 {
     public function register(Request $request)

@@ -103,7 +103,10 @@ class User extends Authenticatable
         return $this->hasMany('Melatop\Model\FacebookPages');
     }
 
-
+    public function notifications()
+    {
+        return $this->hasMany('Melatop\Model\Notifications');
+    }
 
     public static function get_user_from_email($email){
         return User::where('email', $email)->first();

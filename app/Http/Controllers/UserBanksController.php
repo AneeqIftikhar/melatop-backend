@@ -14,6 +14,7 @@ class UserBanksController extends Controller
             'first_name' => 'required|max:100',
             'last_name' => 'required|max:100',
             'account' => 'required|max:100',
+            'bank_id' => 'required',
         ]);
 
         if ($validator->fails()) {

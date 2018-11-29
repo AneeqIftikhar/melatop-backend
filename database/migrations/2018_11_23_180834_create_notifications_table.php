@@ -15,9 +15,12 @@ class CreateNotificationsTable extends Migration
     {
         Schema::create('notifications', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('title','50');
+            $table->string('title','100');
             $table->string('description','255');
-            $table->string('type','10');
+            $table->string('type','25');
+            $table->string('status','25');
+            $table->integer('user_id')->unsigned();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });
     }
