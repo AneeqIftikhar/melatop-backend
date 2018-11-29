@@ -14,7 +14,7 @@ class NotificationsController extends Controller
     {
         $user=Auth::user();
         $notifications=$user->notifications();
-        return response()->success($notifications,'Payments Fetched Successfully');
+        return response()->success($notifications,'Notifications Fetched Successfully');
 	}
 
     /**
@@ -79,8 +79,11 @@ class NotificationsController extends Controller
 					array_push($all,$row);
 				}
 
-				Notifications::insert($all);
+				$notifications=Notifications::insert($all);
+				return response()->success($notifications,'Notifications Sent Successfully');
 			}
+			return response()->fail('No User');
+			
 			 
             
         }
