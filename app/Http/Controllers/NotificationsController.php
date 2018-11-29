@@ -7,6 +7,7 @@ use Melatop\Model\Notifications;
 use Illuminate\Support\Facades\Validator;
 use Melatop\User;
 use Illuminate\Support\Facades\Auth;
+Use \DB;
 class NotificationsController extends Controller
 {
     public function index()
