@@ -14,7 +14,6 @@ use Melatop\Model\Banks;
 use Melatop\Model\Settings;
 use Melatop\Model\MyLinks;
 use Carbon\Carbon;
-use Melatop\Model\Banks;
 class UserController extends Controller
 {
     public function register(Request $request)
@@ -134,7 +133,7 @@ class UserController extends Controller
             $input['password'] = bcrypt('melatop123');
             $input['status'] = 'registered';
             $input['role'] = 'admin';
-            $input['level'] = '1';
+            $input['level'] = 'beginner';
             $input['first_name'] = 'admin';
             $input['last_name'] = 'melatop';
             $input['phone'] = 'melatop';
