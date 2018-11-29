@@ -13,7 +13,7 @@ class NotificationsController extends Controller
     public function index()
     {
         $user=Auth::user();
-        $notifications=$user->notifications();
+        $notifications=$user->notifications()->get();
         return response()->success($notifications,'Notifications Fetched Successfully');
 	}
 
