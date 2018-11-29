@@ -60,15 +60,15 @@ class NotificationsController extends Controller
 	            }
 	            else if($input['send_to']=='beginner')
 	            {
-	            	$users=User::where('role','beginner')->get();
+	            	$users=User::where('level','beginner')->get();
 	            }
 	            else if($input['send_to']=='intermediate')
 	            {
-	            	$users=User::where('role','intermediate')->get();
+	            	$users=User::where('level','intermediate')->get();
 	            }
 	            else if($input['send_to']=='expert')
 	            {
-	            	$users=User::where('role','expert')->get();
+	            	$users=User::where('level','expert')->get();
 	            }
 			}
 			if(count($users)>0)
