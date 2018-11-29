@@ -33,6 +33,7 @@ Route::group(['middleware' => ['cors']], function () {
         Route::resource('banks' , 'BanksController');
         Route::resource('payments' , 'PaymentsController');
         Route::resource('facebook_pages' , 'FacebookPagesController');
+        Route::resource('notifications' , 'NotificationsController');
         Route::post('update_user' , 'UserController@update_user');
         Route::post('add_update_bank_info' , 'UserBanksController@add_update_bank_info');
         Route::get('dashboard','UserController@dashboard');
