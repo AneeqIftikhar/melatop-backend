@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Validator;
 use Melatop\User;
 use Illuminate\Support\Facades\Auth;
 Use \DB;
+use Carbon\Carbon;
 class NotificationsController extends Controller
 {
     public function index()
@@ -30,7 +31,7 @@ class NotificationsController extends Controller
         {
             $validator = Validator::make($request->all(),  [
                 'title' => 'required|max:100',
-                'description' => 'required|max:255',
+                'description' => 'required|max:512',
                 'type' => 'required|max:25',
                 'send_to' => 'required|max:20000'
             ]);
@@ -75,7 +76,7 @@ class NotificationsController extends Controller
 			{
 				$all = array();
 				foreach ($users as $user) {
-					$row=['title'=>$input['title'],'description'=>$input['description'],'type'=>$input['type'],'user_id'=>$user->id,'status'=>'unread'];
+					$row=['title'=>$input['title'],'description'=>$input['description'],'type'=>$input['type'],'user_id'=>$user->id,'status'=>'unread','created_at'=> Carbon::now()];
 					array_push($all,$row);
 				}
 
@@ -91,5 +92,30 @@ class NotificationsController extends Controller
         {
             return response()->fail("Not Allowed");
         }
+    }	
+
+    public function update_notification_status(Request $request)
+    {
+    	$validator = Validator::make($request->all(),  [
+            'notification_id' => 'required',
+            'description' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->fail($validator->errors());
+        }
+
+        $user=Auth::user();
+        $input=$request->all();
+        $notification=Notifications::where('id',$input['notification_id'])->first();
+        if($user->id==$notification->user_id)
+        {
+         	 $notification->update(['status'=>'read']);
+        }
+        else
+        {
+            return response()->fail("Not Allowed");
+        }
     }
+    
 }

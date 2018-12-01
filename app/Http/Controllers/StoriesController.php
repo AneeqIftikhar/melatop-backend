@@ -125,6 +125,13 @@ class StoriesController extends Controller
      */
     public function destroy($id)
     {
-        //
+        
+        $user=Auth::user();
+        if($user->role=='admin')
+        {
+            $stories = Stories::find($id);
+
+            $stories->delete();
+        }
     }
 }
