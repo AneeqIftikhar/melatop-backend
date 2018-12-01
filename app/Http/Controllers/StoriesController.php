@@ -91,6 +91,10 @@ class StoriesController extends Controller
             $stories = Stories::create($input);
             return response()->success($stories,'Story Created Successfully');
         }
+        else
+        {
+            return response()->fail("Not Allowed");
+        }
         
     }
 
@@ -132,6 +136,11 @@ class StoriesController extends Controller
             $stories = Stories::find($id);
 
             $stories->delete();
+            return response()->success([],'Story Deleted Successfully');
+        }
+        else
+        {
+            return response()->fail("Not Allowed");
         }
     }
 }
