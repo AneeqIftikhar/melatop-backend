@@ -271,7 +271,7 @@ class UserController extends Controller
         $result['today_desktop']=$desktop;
         $result['today_mobile']=$mobile;
         $result['today_tablet']=$tablet;
-        $result['today_total']=$android+$month_visits+$yesterday_visits;
+        $result['today_total']=$tablet+$mobile+$desktop;
 
 
 
