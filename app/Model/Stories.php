@@ -21,6 +21,7 @@ class Stories extends Model
     protected $fillable = ['category', 'link', 'image', 'title', 'created_at', 'updated_at'];
 
     protected $guarded = ['id','created_by'];
+    protected $appends = ['user_link'];
     public static function boot() {
         parent::boot();
 
@@ -30,4 +31,12 @@ class Stories extends Model
         });
 
 	}
+
+    public function getUserLinkAttribute()
+    {
+        $user=Auth::user();
+        $base = config('app.url');
+        return $base.'visiting_story/'.$user->id.'_'.$this->id;
+
+    }
 }

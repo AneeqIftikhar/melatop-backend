@@ -15,9 +15,9 @@ class CreateSettingsTable extends Migration
     {
         Schema::create('settings', function (Blueprint $table) {
             $table->increments('id');
-            $table->float('beginner_rate')->default(0.001);
-            $table->float('intermediate_rate')->default(0.005);
-            $table->float('expert_rate')->default(0.01);
+            $table->double('beginner_rate', 8, 4)->default(0.0010);
+            $table->double('intermediate_rate', 8, 4)->default(0.0050);
+            $table->double('expert_rate', 8, 4)->default(0.0100);
             $table->timestamps();
         });
     }

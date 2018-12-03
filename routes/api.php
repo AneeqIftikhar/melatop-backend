@@ -26,6 +26,8 @@ Route::group(['middleware' => ['cors']], function () {
     Route::get('create_admin','UserController@create_dummy_admin');
     Route::post('change_password' , 'UserController@change_password');
     Route::post('add_update_mylinks' , 'MyLinksController@add_update_mylinks');
+
+     Route::get('visiting_story/{user_id}/{stories_id}','StoriesController@visiting_story');
     Route::group(['middleware' => ['auth:api']], function () {
         Route::resource('stories' , 'StoriesController');
         Route::resource('saved_links' , 'SavedLinksController');
@@ -48,6 +50,8 @@ Route::group(['middleware' => ['cors']], function () {
         Route::post('change_user_status' , 'AdminController@change_user_status');
         Route::post('change_payment_status' , 'AdminController@update_user');
         Route::post('add_payment' , 'AdminController@add_payment');
+
+
 
 
 

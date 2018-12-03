@@ -143,11 +143,11 @@ class UserController extends Controller
         $banks=Banks::all();
         if(count($banks)==0)
         {
-            Banks::create(['id'=>'1','name'=>'Dashen Bank', 'short'=>'Dashen Bank']);
-            Banks::create(['id'=>'2','name'=>'Awash International Bank', 'short'=>'AIB']);
-            Banks::create(['id'=>'3','name'=>'Bank of Abyssinia', 'short'=>'BOA']);
-            Banks::create(['id'=>'4','name'=>'Commercial Bank of Ethiopia', 'short'=>'CBE']);
-            Banks::create(['id'=>'5','name'=>'United Bank', 'short'=>'United Bank']);
+
+            Banks::create(['id'=>'1','name'=>'Commercial Bank of Ethiopia', 'short'=>'CBE']);
+            Banks::create(['id'=>'2','name'=>'Dashen Bank', 'short'=>'Dashen']);
+            Banks::create(['id'=>'3','name'=>'United Bank of Ethiopia', 'short'=>'UBE']);
+            Banks::create(['id'=>'4','name'=>'Awash Bank', 'short'=>'Awash']);
            
         }
         

@@ -174,6 +174,7 @@ return [
         Melatop\Providers\RouteServiceProvider::class,
         Melatop\Providers\ResponseMacroServiceProvider::class,
         Krlove\EloquentModelGenerator\Provider\GeneratorServiceProvider::class,
+        \hisorange\BrowserDetect\ServiceProvider::class,
 
     ],
 
@@ -223,6 +224,7 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
+        'Browser' => \hisorange\BrowserDetect\Facade::class,
 
     ],
 
