@@ -264,13 +264,13 @@ class UserController extends Controller
 
         $result['balance']=$total_balance;
 
-        $web=$user->visits()->whereDate('created_at',Carbon::today()->toDateString())->where('platform','web')->count();
-        $ios=$user->visits()->whereDate('created_at',Carbon::today()->toDateString())->where('platform','ios')->count();
-        $android=$user->visits()->whereDate('created_at',Carbon::today()->toDateString())->where('platform','android')->count();
+        $desktop=$user->visits()->whereDate('created_at',Carbon::today()->toDateString())->where('platform','desktop')->count();
+        $mobile=$user->visits()->whereDate('created_at',Carbon::today()->toDateString())->where('platform','mobile')->count();
+        $tablet=$user->visits()->whereDate('created_at',Carbon::today()->toDateString())->where('platform','tablet')->count();
 
-        $result['today_web']=$yesterday_visits;
-        $result['today_ios']=$month_visits;
-        $result['today_android']=$android;
+        $result['today_desktop']=$desktop;
+        $result['today_mobile']=$mobile;
+        $result['today_tablet']=$tablet;
         $result['today_total']=$android+$month_visits+$yesterday_visits;
 
 
