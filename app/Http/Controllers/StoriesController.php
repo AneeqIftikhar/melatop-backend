@@ -198,7 +198,7 @@ class StoriesController extends Controller
 
                 Visits::create(['user_id'=>$user_id, 'stories_id'=>$stories_id,'rate'=>$rate,'level'=>$user->level,'ip'=>$request->ip(),'browser'=>Browser::browserName(),'platform'=>$platform]);
 
-                return response()->success([],'Story Deleted Successfully');
+                //return response()->success([],'Story Deleted Successfully');
                 return Redirect::to($story->link);
             }
         }
