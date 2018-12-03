@@ -42,6 +42,8 @@ Route::group(['middleware' => ['cors']], function () {
         Route::get('dashboard','UserController@dashboard');
         Route::post('dashboard_date','UserController@dashboard_date');
 
+        Route::get('visits','StoriesController@get_visits');
+
 
         //admin
         Route::get('get_all_payments','AdminController@get_all_payments');

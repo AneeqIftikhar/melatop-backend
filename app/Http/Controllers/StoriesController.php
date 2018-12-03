@@ -204,4 +204,14 @@ class StoriesController extends Controller
         }
         
     }
+    public function get_visits(Request $request)
+    {
+        $user=Auth::user();
+        if($user)
+        {
+            return response()->success($user->visits()->get(),'Story Deleted Successfully');
+           
+        }
+        
+    }
 }
