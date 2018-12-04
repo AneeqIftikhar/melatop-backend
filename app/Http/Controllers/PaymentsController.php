@@ -52,10 +52,6 @@ class PaymentsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -65,7 +61,18 @@ class PaymentsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $user=Auth::user();
+        if($user->role=='admin')
+        {
+             $payments=Payments::cron_job_payments();
+            return response()->success($payments
+           ,'Payments Created Successfully');
+        }
+        else
+        {
+            return response()->fail('Not Allowed');
+        }
+       
     }
 
     /**
@@ -112,4 +119,6 @@ class PaymentsController extends Controller
     {
         //
     }
+
+
 }

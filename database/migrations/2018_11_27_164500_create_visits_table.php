@@ -21,7 +21,7 @@ class CreateVisitsTable extends Migration
 
             $table->integer('user_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->float('rate');
+            $table->double('rate',8,4);
             $table->string('level','255')->nullable();
             $table->string('ip','255')->nullable();
             $table->string('platform','255')->nullable();//web/android/ios

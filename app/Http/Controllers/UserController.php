@@ -88,7 +88,7 @@ class UserController extends Controller
             }
             else
             {
-                 $userTokens=$user->tokens;
+                $userTokens=$user->tokens;
                 foreach($userTokens as $token) {
                     $token->delete();
                 }
@@ -107,6 +107,7 @@ class UserController extends Controller
                 {
                     return response()->fail('Incorrect Email Or Password');
                 }
+                $user->update(['last_online'=>Carbon::now()]);
                 $user['token']=$response_token->access_token;
                 $user['refresh_token']=$response_token->refresh_token;
                 $user['expire_time']=$response_token->expires_in;

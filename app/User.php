@@ -19,11 +19,11 @@ class User extends Authenticatable
      * @var string
      */
     protected $table = 'users';
-    protected $appends = ['image_url'];
+    protected $appends = ['image_url','online_at'];
     /**
      * @var array
      */
-    protected $fillable = ['country_id', 'state_id', 'bank_id', 'first_name', 'last_name', 'email', 'password', 'phone', 'status', 'role', 'level', 'city', 'image', 'account', 'deleted_at', 'remember_token', 'created_at', 'updated_at'];
+    protected $fillable = ['country_id', 'state_id', 'bank_id', 'first_name', 'last_name', 'email', 'password', 'phone', 'status', 'role', 'level', 'city', 'image', 'account', 'deleted_at', 'remember_token', 'created_at', 'updated_at','last_online'];
 
 
         /**
@@ -128,6 +128,14 @@ class User extends Authenticatable
        {
            $base = config('app.url');
            return $base.$this->image;
+       }
+       return null;
+    }
+    public function getOnlineAtAttribute()
+    {
+       if($this->last_online)
+       {
+           return Carbon::parse($this->last_online)->diffForHumans();
        }
        return null;
     }

@@ -26,6 +26,7 @@ class CreateUsersTable extends Migration
                 $table->string('city','100')->nullable();
                 $table->string('image','100')->nullable();
                 $table->integer('state_id')->nullable();
+                $table->timestamp('last_online')->nullable();
                 $table->softDeletes();
                 $table->rememberToken();
                 $table->timestamps();
