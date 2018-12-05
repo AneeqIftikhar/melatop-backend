@@ -234,10 +234,10 @@ class UserController extends Controller
         $Year = $today->year;
         $PreviousMonthYear = $Year;
         $PreviousMonth= $Month-1;
-        if($LastMonth==0)
+        if($PreviousMonth==0)
         {
-            $LastMonth=12;
-            $LastMonthYear=$LastMonthYear-1;
+            $PreviousMonth=12;
+            $PreviousMonthYear=$PreviousMonthYear-1;
         }
         $user=Auth::user();
         if($user->role=='admin')
