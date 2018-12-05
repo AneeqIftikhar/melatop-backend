@@ -36,7 +36,7 @@ class Stories extends Model
     {
         $user=Auth::user();
         $base = config('app.url');
-        return $base.'visiting_story/'.$user->id.'/'.$this->id;
+        return $base.'api/visiting_story/'.$user->id.'/'.$this->id;
 
     }
 }

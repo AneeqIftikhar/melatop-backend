@@ -27,10 +27,10 @@ Route::group(['middleware' => ['cors']], function () {
     Route::post('change_password' , 'UserController@change_password');
     Route::post('add_update_mylinks' , 'MyLinksController@add_update_mylinks');
 
-     Route::get('visiting_story/{user_id}/{stories_id}','StoriesController@visiting_story');
+    Route::get('visiting_story/{user_id}/{stories_id}','StoriesController@visiting_story');
 
     Route::group(['middleware' => ['last_online']], function () { 
-        
+
         Route::group(['middleware' => ['auth:api']], function () {
             Route::resource('stories' , 'StoriesController');
             Route::resource('saved_links' , 'SavedLinksController');

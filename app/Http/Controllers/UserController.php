@@ -13,7 +13,9 @@ use Melatop\Helpers\Helper;
 use Melatop\Model\Banks;
 use Melatop\Model\Settings;
 use Melatop\Model\MyLinks;
+use Melatop\Model\Visits;
 use Carbon\Carbon;
+
 class UserController extends Controller
 {
     public function register(Request $request)
@@ -230,53 +232,92 @@ class UserController extends Controller
         $yesterday=Carbon::yesterday();
         $Month = $today->month;
         $Year = $today->year;
-        $user=Auth::user();
-        $settings=Settings::first();
-        $user_rate=0;
-        if($user->level=="beginner")
+        $PreviousMonthYear = $Year;
+        $PreviousMonth= $Month-1;
+        if($LastMonth==0)
         {
-            $user_rate=$settings->beginner_rate;
+            $LastMonth=12;
+            $LastMonthYear=$LastMonthYear-1;
         }
-        else if($user->level=="intermediate")
+        $user=Auth::user();
+        if($user->role=='admin')
         {
-            $user_rate=$settings->intermediate_rate;
+            $today_visits=Visits::whereDate('created_at',Carbon::today()->toDateString())->count();
+            $yesterday_visits=Visits::whereDate('created_at',Carbon::today()->toDateString())->count();
+
+            $month_visits=Visits::whereYear('created_at',$Year)->whereMonth('created_at',$Month)->count();
+            $prvious_month_visits=Visits::whereYear('created_at',$PreviousMonthYear)->whereMonth('created_at',$PreviousMonth)->count();
+
+            $result=[];
+            $result['today_visits']=$today_visits;
+            $result['yesterday_visits']=$yesterday_visits;
+            $result['month_visits']=$month_visits;
+            $result['prvious_month_visits']=$prvious_month_visits;
+
+
+            $today_links=MyLinks::whereDate('created_at',Carbon::today()->toDateString())->count();
+            $yesterday_links=MyLinks::whereDate('created_at',Carbon::today()->toDateString())->count();
+
+            $month_links=MyLinks::whereYear('created_at',$Year)->whereMonth('created_at',$Month)->count();
+            $previous_month_links=MyLinks::whereYear('created_at',$PreviousMonthYear)->whereMonth('created_at',$PreviousMonth)->count();
+
+            $result['today_links']=$today_links;
+            $result['yesterday_links']=$yesterday_links;
+            $result['month_links']=$month_links;
+            $result['previous_month_links']=$previous_month_links;
+
+            return response()->success($result,'Admin Dashboard Fetched Successfully');
         }
         else
         {
-            $user_rate=$settings->expert_rate;
+            $settings=Settings::first();
+            $user_rate=0;
+            if($user->level=="beginner")
+            {
+                $user_rate=$settings->beginner_rate;
+            }
+            else if($user->level=="intermediate")
+            {
+                $user_rate=$settings->intermediate_rate;
+            }
+            else
+            {
+                $user_rate=$settings->expert_rate;
+            }
+            $today_visits=$user->visits()->whereDate('created_at',Carbon::today()->toDateString())->count();
+            $yesterday_visits=$user->visits()->whereDate('created_at',Carbon::today()->toDateString())->count();
+
+            $month_visits=$user->visits()->whereYear('created_at',$Year)->whereMonth('created_at',$Month)->count();
+
+            $result=[];
+            $result['today_earning']=$today_visits*$user_rate;
+            $result['yesterday_earning']=$yesterday_visits*$user_rate;
+            $result['month_earning']=$month_visits*$user_rate;
+
+
+
+            $pending=$user->payments()->where('status','!=','paid')->get();
+            $total_balance=0;
+            foreach ($pending as $pending_payments) {
+                $total_balance=$pending_amount+$pending_payments->amount;
+            }
+
+            $result['balance']=$total_balance;
+
+            $desktop=$user->visits()->whereDate('created_at',Carbon::today()->toDateString())->where('platform','desktop')->count();
+            $mobile=$user->visits()->whereDate('created_at',Carbon::today()->toDateString())->where('platform','mobile')->count();
+            $tablet=$user->visits()->whereDate('created_at',Carbon::today()->toDateString())->where('platform','tablet')->count();
+
+            $result['today_desktop']=$desktop;
+            $result['today_mobile']=$mobile;
+            $result['today_tablet']=$tablet;
+            $result['today_total']=$tablet+$mobile+$desktop;
+
+
+
+            return response()->success($result,'Dashboard Fetched Successfully');
         }
-        $today_visits=$user->visits()->whereDate('created_at',Carbon::today()->toDateString())->count();
-        $yesterday_visits=$user->visits()->whereDate('created_at',Carbon::today()->toDateString())->count();
-
-        $month_visits=$user->visits()->whereYear('created_at',$Year)->whereMonth('created_at',$Month)->count();
-
-        $result=[];
-        $result['today_earning']=$today_visits*$user_rate;
-        $result['yesterday_earning']=$yesterday_visits*$user_rate;
-        $result['month_earning']=$month_visits*$user_rate;
-
-
-
-        $pending=$user->payments()->where('status','!=','paid')->get();
-        $total_balance=0;
-        foreach ($pending as $pending_payments) {
-            $total_balance=$pending_amount+$pending_payments->amount;
-        }
-
-        $result['balance']=$total_balance;
-
-        $desktop=$user->visits()->whereDate('created_at',Carbon::today()->toDateString())->where('platform','desktop')->count();
-        $mobile=$user->visits()->whereDate('created_at',Carbon::today()->toDateString())->where('platform','mobile')->count();
-        $tablet=$user->visits()->whereDate('created_at',Carbon::today()->toDateString())->where('platform','tablet')->count();
-
-        $result['today_desktop']=$desktop;
-        $result['today_mobile']=$mobile;
-        $result['today_tablet']=$tablet;
-        $result['today_total']=$tablet+$mobile+$desktop;
-
-
-
-        return response()->success($result,'Dashboard Fetched Successfully');
+        
     }
 
     public function dashboard_date(Request $request)

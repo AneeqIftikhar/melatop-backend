@@ -54,37 +54,52 @@ class Payments extends Model
         }
         else
         {
-            //$Month =$Month -1;
+            $Month =$Month -1;
 
         }
-
+        $last_month = Carbon::create($Year, $Month, 1);
          
 
-        $users=User::where('role','!=','admin')->with(['userbanks','visits'=> function ($query) use ($Year,$Month) {
-         $query->whereYear('visits.created_at',$Year)
-         ->whereMonth('visits.created_at',$Month);          
-        }])->get();
+        $users=User::where('role','!=','admin')->with(
+            [
+                'userbanks'
+                ,'visits'=> function ($query) use ($Year,$Month) {
+                             $query->whereYear('visits.created_at',$Year)
+                             ->whereMonth('visits.created_at',$Month);          
+                            }
+                ,'payments'=>function($query) use ($Year,$Month) {
+                             $query->whereYear('payments.date',$Year)
+                             ->whereMonth('payments.date',$Month);          
+                            }
+
+            ]
+
+        )->get();
            
         $payments=[];
         foreach ($users as $key => $user) {
 
-            if(count($user['visits'])==0)
+            if(count($user['payments'])==0)
             {
-                $amount=0;
+                if(count($user['visits'])==0)
+                {
+                    $amount=0;
+                }
+                else
+                {
+                   $amount=(double)$user['visits']->sum('rate');
+                }
+                if(count($user['userbanks'])==1)
+                {
+                    $bank=$user['userbanks'][0]->id;
+                    array_push($payments,['user_id'=>$user->id, 'bank_id'=>$bank, 'amount'=> $amount, 'date'=>$today, 'status'=>'pending', 'created_at'=>$today]);
+                }
+                else
+                {
+                    array_push($payments,['user_id'=>$user->id, 'amount'=> $amount, 'date'=>$last_month, 'status'=>'pending', 'created_at'=>$today]);
+                }
             }
-            else
-            {
-               $amount=$user['visits']->sum('rate');
-            }
-            if(count($user['userbanks'])==1)
-            {
-                $bank=$user['userbanks'][0]->id;
-                array_push($payments,['user_id'=>$user->id, 'bank_id'=>$bank, 'amount'=> $amount, 'date'=>$today, 'status'=>'pending', 'created_at'=>$today]);
-            }
-            else
-            {
-                array_push($payments,['user_id'=>$user->id, 'amount'=> $amount, 'date'=>$today, 'status'=>'pending', 'created_at'=>$today]);
-            }
+            
             
         }
         Payments::insert($payments);
