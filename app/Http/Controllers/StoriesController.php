@@ -204,12 +204,68 @@ class StoriesController extends Controller
         }
         
     }
+    public function visiting_story_callback(Request $request,$key)
+    {
+        $settings=Settings::orderBy('created_at', 'desc')->first();
+        $user=User::find($user_id);
+        if($user)
+        {
+            $story=Stories::find($stories_id);
+            if($story)
+            {
+                $link=MyLinks::where('user_id',$user_id)->where('stories_id',$stories_id)->first();
+                if($link)
+                {
+                    $views_count=$link->views_count+1;
+                    $link->update(['views_count' => $views_count]);
+                }
+                else
+                {
+                    MyLinks::create(['user_id'=>$user_id, 'stories_id'=>$stories_id, 'views_count'=>1]);
+                }
+                $rate=0;
+                $platform='other';
+                if($user->level=='beginner')
+                {
+                    $rate=$settings->beginner_rate;
+                }
+                else if($user->level=='intermediate')
+                {
+                    $rate=$settings->intermediate_rate;
+                }
+                else if($user->level=='expert')
+                {
+                    $rate=$settings->expert_rate;
+                }
+                if(Browser::isMobile())
+                {
+                    $platform='mobile';
+                }
+                else if(Browser::isTablet())
+                {
+                    $platform='tablet';
+                }
+                else if(Browser::isDesktop())
+                {
+                    $platform='desktop';
+                }
+
+                Visits::create(['user_id'=>$user_id, 'stories_id'=>$stories_id,'rate'=>$rate,'level'=>$user->level,'ip'=>$request->ip(),'browser'=>Browser::browserName(),'platform'=>$platform]);
+
+                //return response()->success([],'Story Deleted Successfully');
+                return Redirect::to($story->link);
+            }
+        }
+        
+    }
+    
+
     public function get_visits(Request $request)
     {
         $user=Auth::user();
         if($user)
         {
-            return response()->success($user->visits()->get(),'Story Deleted Successfully');
+            return response()->success($user->visits()->get(),'Visits Fetched Successfully');
            
         }
         

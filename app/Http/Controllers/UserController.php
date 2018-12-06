@@ -288,11 +288,24 @@ class UserController extends Controller
             $yesterday_visits=$user->visits()->whereDate('created_at',Carbon::today()->toDateString())->count();
 
             $month_visits=$user->visits()->whereYear('created_at',$Year)->whereMonth('created_at',$Month)->count();
+            $last_month_visits=$user->visits()->whereYear('created_at',$PreviousMonthYear)->whereMonth('created_at',$PreviousMonth)->count();
+
+            $today_earning=$user->visits()->whereDate('created_at',Carbon::today()->toDateString())->sum('rate');
+            $yesterday_earning=$user->visits()->whereDate('created_at',Carbon::today()->toDateString())->sum('rate');
+
+            $month_earning=$user->visits()->whereYear('created_at',$Year)->whereMonth('created_at',$Month)->sum('rate');
+
+            $last_month_earning=$user->visits()->whereYear('created_at',$PreviousMonthYear)->whereMonth('created_at',$PreviousMonth)->sum('rate');
 
             $result=[];
-            $result['today_earning']=$today_visits*$user_rate;
-            $result['yesterday_earning']=$yesterday_visits*$user_rate;
-            $result['month_earning']=$month_visits*$user_rate;
+            $result['today_visits']=$today_visits;
+            $result['yesterday_visits']=$yesterday_visits;
+            $result['this_month_visits']=$month_visits;
+            $result['last_month_visits']=$last_month_visits;
+            $result['today_earning']=$today_earning;
+            $result['yesterday_earning']=$yesterday_earning;
+            $result['month_earning']=$month_earning;
+            $result['last_month_earning']=$last_month_earning;
 
 
 
@@ -307,11 +320,13 @@ class UserController extends Controller
             $desktop=$user->visits()->whereDate('created_at',Carbon::today()->toDateString())->where('platform','desktop')->count();
             $mobile=$user->visits()->whereDate('created_at',Carbon::today()->toDateString())->where('platform','mobile')->count();
             $tablet=$user->visits()->whereDate('created_at',Carbon::today()->toDateString())->where('platform','tablet')->count();
+            $other=$user->visits()->whereDate('created_at',Carbon::today()->toDateString())->where('platform','other')->count();
 
             $result['today_desktop']=$desktop;
             $result['today_mobile']=$mobile;
             $result['today_tablet']=$tablet;
-            $result['today_total']=$tablet+$mobile+$desktop;
+            $result['today_other']=$other;
+            $result['today_total']=$tablet+$mobile+$desktop+$other;
 
 
 
