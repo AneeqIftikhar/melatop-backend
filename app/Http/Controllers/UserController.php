@@ -285,7 +285,7 @@ class UserController extends Controller
                 $user_rate=$settings->expert_rate;
             }
             $today_visits=$user->visits()->whereDate('created_at',Carbon::today()->toDateString())->count();
-            $yesterday_visits=$user->visits()->whereDate('created_at',Carbon::today()->toDateString())->count();
+            $yesterday_visits=$user->visits()->whereDate('created_at',$yesterday->toDateString())->count();
 
             $month_visits=$user->visits()->whereYear('created_at',$Year)->whereMonth('created_at',$Month)->count();
             $last_month_visits=$user->visits()->whereYear('created_at',$PreviousMonthYear)->whereMonth('created_at',$PreviousMonth)->count();
@@ -304,7 +304,7 @@ class UserController extends Controller
             $result['last_month_visits']=$last_month_visits;
             $result['today_earning']=$today_earning;
             $result['yesterday_earning']=$yesterday_earning;
-            $result['month_earning']=$month_earning;
+            $result['this_month_earning']=$month_earning;
             $result['last_month_earning']=$last_month_earning;
 
 
