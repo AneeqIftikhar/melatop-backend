@@ -13,7 +13,7 @@ class BanksController extends Controller
      */
     public function index()
     {
-        return response()->success(Banks::all();,'Banks Information Fetched Successfully');
+        return response()->success(Banks::all(),'Banks Information Fetched Successfully');
     }
 
     

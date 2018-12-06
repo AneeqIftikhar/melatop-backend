@@ -234,6 +234,7 @@ class UserController extends Controller
         $Year = $today->year;
         $PreviousMonthYear = $Year;
         $PreviousMonth= $Month-1;
+        $minus_seven_days=Carbon::now()->subDays(6);
         if($PreviousMonth==0)
         {
             $PreviousMonth=12;
@@ -312,7 +313,7 @@ class UserController extends Controller
             $pending=$user->payments()->where('status','!=','paid')->get();
             $total_balance=0;
             foreach ($pending as $pending_payments) {
-                $total_balance=$pending_amount+$pending_payments->amount;
+                $total_balance=$total_balance+$pending_payments->amount;
             }
 
             $result['balance']=$total_balance;
@@ -328,7 +329,35 @@ class UserController extends Controller
             $result['today_other']=$other;
             $result['today_total']=$tablet+$mobile+$desktop+$other;
 
+            
 
+            $weekly = DB::table('visits')
+                 ->select(DB::raw('DATE(created_at) as date'), DB::raw('count(*) as total'))
+                 ->where('created_at','<=',$today)
+                 ->where('created_at','>=',$minus_seven_days)
+                 ->where('user_id',$user->id)
+                 ->groupBy(DB::raw('DATE(created_at)'))
+                 ->get();
+            $weekly_summary=[];
+            $j=0;
+            for($i=0;$i<7;$i++)
+            {
+                $val=$weekly[$j];
+                if($val->date === Carbon::now()->subDays(6-$i)->format('Y-m-d'))
+                {
+                    $weekly_summary[$i] = $val->total; 
+                    $j++;
+                }
+                else
+                {
+                    $weekly_summary[$i] =0;
+
+                }
+                
+            }
+            $result['weekly_summary']=$weekly_summary;
+            //Carbon::createFromFormat('Y-m-d', '1975-05-21')->toDateTimeString();
+           
 
             return response()->success($result,'Dashboard Fetched Successfully');
         }
