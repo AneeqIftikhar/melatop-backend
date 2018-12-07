@@ -78,13 +78,17 @@ class StoriesController extends Controller
                 $description = $tags["twitter:description"];
             }
 
-            if(isset($tags["twitter:image:src"])){
+            if(isset($tags["twitter:image:src"]))
+            {
                 $img = $tags["twitter:image:src"];
-            }else if(isset($tags["twitter:image"])){
+            }
+            else if(isset($tags["twitter:image"]))
+            {
                 $img = $tags["twitter:image"];
             }
 
-             if(isset($tags["category"])){
+            if(isset($tags["category"]))
+            {
                 $category = $tags["category"];
             }else{
                 $category= "Undefined";
@@ -213,7 +217,7 @@ class StoriesController extends Controller
         //$decrypted = Crypt::decryptString($encrypted);
 
         $key_parse = Crypt::decryptString($key);
-        $key_parse = explode('_', $key_parse)
+        $key_parse = explode('_', $key_parse);
         if(count($key_parse)==6)
         {
             $time=$key_parse[0];
