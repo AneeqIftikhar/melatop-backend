@@ -342,17 +342,26 @@ class UserController extends Controller
             $j=0;
             for($i=0;$i<7;$i++)
             {
-                $val=$weekly[$j];
-                if($val->date === Carbon::now()->subDays(6-$i)->format('Y-m-d'))
+                if($j<count($weekly))
                 {
-                    $weekly_summary[$i] = $val->total; 
-                    $j++;
+                    $val=$weekly[$j];
+                    if($val->date === Carbon::now()->subDays(6-$i)->format('Y-m-d'))
+                    {
+                        $weekly_summary[$i] = $val->total; 
+                        $j++;
+                    }
+                    else
+                    {
+                        $weekly_summary[$i] =0;
+
+                    }
                 }
                 else
                 {
                     $weekly_summary[$i] =0;
 
                 }
+                
                 
             }
             $result['weekly_summary']=$weekly_summary;

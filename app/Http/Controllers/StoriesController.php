@@ -12,6 +12,7 @@ use Melatop\User;
 use Melatop\Model\Visits;
 use Melatop\Model\Settings;
 use Browser;
+use Illuminate\Support\Facades\Crypt;
 class StoriesController extends Controller
 {
     /**
@@ -205,57 +206,66 @@ class StoriesController extends Controller
         
     }
     public function visiting_story_callback(Request $request,$key)
-    {
-        $settings=Settings::orderBy('created_at', 'desc')->first();
-        $user=User::find($user_id);
-        if($user)
+    {   
+
+        //$encrypted = Crypt::encryptString('Hello world.');
+
+        //$decrypted = Crypt::decryptString($encrypted);
+
+        $key_parse = Crypt::decryptString($key);
+        $key_parse = explode('_', $key_parse)
+        if(count($key_parse)==6)
         {
-            $story=Stories::find($stories_id);
-            if($story)
+            $time=$key_parse[0];
+            $user_id=$key_parse[1];
+            $stories_id=$key_parse[2];
+            $platform = $key_parse[3];
+            $ip = $key_parse[4];
+            $browser = $key_parse[5];
+            $settings=Settings::orderBy('created_at', 'desc')->first();
+            $user=User::find($user_id);
+            if($user)
             {
-                $link=MyLinks::where('user_id',$user_id)->where('stories_id',$stories_id)->first();
-                if($link)
+                $story=Stories::find($stories_id);
+                if($story)
                 {
-                    $views_count=$link->views_count+1;
-                    $link->update(['views_count' => $views_count]);
-                }
-                else
-                {
-                    MyLinks::create(['user_id'=>$user_id, 'stories_id'=>$stories_id, 'views_count'=>1]);
-                }
-                $rate=0;
-                $platform='other';
-                if($user->level=='beginner')
-                {
-                    $rate=$settings->beginner_rate;
-                }
-                else if($user->level=='intermediate')
-                {
-                    $rate=$settings->intermediate_rate;
-                }
-                else if($user->level=='expert')
-                {
-                    $rate=$settings->expert_rate;
-                }
-                if(Browser::isMobile())
-                {
-                    $platform='mobile';
-                }
-                else if(Browser::isTablet())
-                {
-                    $platform='tablet';
-                }
-                else if(Browser::isDesktop())
-                {
-                    $platform='desktop';
-                }
+                    $link=MyLinks::where('user_id',$user_id)->where('stories_id',$stories_id)->first();
+                    if($link)
+                    {
+                        $views_count=$link->views_count+1;
+                        $link->update(['views_count' => $views_count]);
+                    }
+                    else
+                    {
+                        MyLinks::create(['user_id'=>$user_id, 'stories_id'=>$stories_id, 'views_count'=>1]);
+                    }
+                    $rate=0;
+                    if($user->level=='beginner')
+                    {
+                        $rate=$settings->beginner_rate;
+                    }
+                    else if($user->level=='intermediate')
+                    {
+                        $rate=$settings->intermediate_rate;
+                    }
+                    else if($user->level=='expert')
+                    {
+                        $rate=$settings->expert_rate;
+                    }
 
-                Visits::create(['user_id'=>$user_id, 'stories_id'=>$stories_id,'rate'=>$rate,'level'=>$user->level,'ip'=>$request->ip(),'browser'=>Browser::browserName(),'platform'=>$platform]);
+                    Visits::create(['user_id'=>$user_id, 'stories_id'=>$stories_id,'rate'=>$rate,'level'=>$user->level,'ip'=>$ip,'browser'=>$browser,'platform'=>$platform]);
 
-                //return response()->success([],'Story Deleted Successfully');
-                return Redirect::to($story->link);
+                    return response()->success([],'Successfully Visit Added');
+                    //return Redirect::to($story->link);
+                }
             }
         }
+        else
+        {
+             return response()->fail('Key is Not okay');
+           
+        }
+        
         
     }
     
