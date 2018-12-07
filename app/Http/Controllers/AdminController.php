@@ -65,7 +65,8 @@ class AdminController extends Controller
         $user=Auth::user();
         if($user->role=='admin')
         {
-            $payments=Payments::all();
+            $payments=Payments::with('user','bank')->get();
+
             return response()->success($payments,'Payments Fetched Successfully');
         }
         else
