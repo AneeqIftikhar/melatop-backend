@@ -53,7 +53,7 @@ Route::group(['middleware' => ['cors']], function () {
             Route::get('get_all_users','AdminController@get_all_users');
 
             Route::post('change_user_status' , 'AdminController@change_user_status');
-            Route::post('change_payment_status' , 'AdminController@update_user');
+            Route::post('change_payment_status' , 'AdminController@change_payment_status');
             Route::post('add_payment' , 'AdminController@add_payment');
 
             Route::get('dummy_payments','PaymentsController@dummy_payments');
