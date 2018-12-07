@@ -4,8 +4,10 @@ namespace Melatop\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Melatop\Model\Payments;
+use Melatop\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use Carbon\Carbon;
 class PaymentsController extends Controller
 {
     /**
@@ -66,6 +68,26 @@ class PaymentsController extends Controller
         {
              $payments=Payments::cron_job_payments();
             return response()->success($payments
+           ,'Payments Created Successfully');
+        }
+        else
+        {
+            return response()->fail('Not Allowed');
+        }
+       
+    }
+
+    public function dummy_payments(Request $request)
+    {
+        $user=Auth::user();
+        if($user->role=='admin')
+        {
+            $users=User::all();
+            foreach ($users as $key => $value) {
+                Payments::create(['user_id'=>$value->id, 'amount'=> rand(0,1000), 'date'=>Carbon::now(), 'status'=>'pending']);
+            }
+           
+            return response()->success([]
            ,'Payments Created Successfully');
         }
         else
