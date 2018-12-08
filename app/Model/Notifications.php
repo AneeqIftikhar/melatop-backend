@@ -18,7 +18,7 @@ class Notifications extends Model
     {
        if($this->created_at)
        {
-           return Carbon::now()->diffForHumans($this->created_at);
+           return Carbon::parse($this->created_at)->diffForHumans();
        }
        return null;
     }

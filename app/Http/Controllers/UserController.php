@@ -267,6 +267,80 @@ class UserController extends Controller
             $result['month_links']=$month_links;
             $result['previous_month_links']=$previous_month_links;
 
+
+             $user_role = DB::table('users')
+                 ->select(DB::raw('role'), DB::raw('count(*) as total'))
+                 ->groupBy(DB::raw('role'))
+                 ->get();
+            
+
+            $result['user_role']=$user_role;
+
+            $level = DB::table('users')
+                 ->select(DB::raw('level'), DB::raw('count(*) as total'))
+                 ->groupBy(DB::raw('level'))
+                 ->get();
+            $user_level=[];
+            $total_users=0;
+            foreach ($level as $key => $value) 
+            {
+                if($value->level=="beginner")
+                {
+                     array_push($user_level,['level'=>'beginner','total'=>$value->total]);
+                }
+                if($value->level=="intermediate")
+                {
+                    array_push($user_level,['level'=>'intermediate','total'=>$value->total]);
+                }
+                if($value->level=="expert")
+                {
+                    array_push($user_level,['level'=>'expert','total'=>$value->total]);
+                }
+                $total_users=$total_users+$value->total;
+            }
+
+            if(count($user_level)==0)
+            {
+                array_push($user_level,['level'=>'beginner','total'=>0]);
+                array_push($user_level,['level'=>'intermediate','total'=>0]);
+                array_push($user_level,['level'=>'expert','total'=>0]);
+            }
+            else
+            {
+                $beginner=0;
+                $intermediate=0;
+                $expert=0;
+                foreach ($user_level as $key => $value) {
+                    if($value['level']=="beginner")
+                    {
+                        $beginner=1;
+                    }
+                    if($value['level']=="intermediate")
+                    {
+                        $intermediate=1;
+                    }
+                    if($value['level']=="expert")
+                    {
+                        $expert=1;
+                    }
+                }
+                if($beginner==0)
+                {
+                    array_push($user_level,['level'=>'beginner','total'=>0]);
+                }
+                if($intermediate==0)
+                {
+                    array_push($user_level,['level'=>'intermediate','total'=>0]);
+                }
+                if($expert==0)
+                {
+                    array_push($user_level,['level'=>'expert','total'=>0]);
+                }
+            }    
+            
+            $result['user_level']=$user_level;
+            $result['total_users']=$total_users;
+
             return response()->success($result,'Admin Dashboard Fetched Successfully');
         }
         else
