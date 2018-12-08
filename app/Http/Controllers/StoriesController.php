@@ -13,6 +13,7 @@ use Melatop\Model\Visits;
 use Melatop\Model\Settings;
 use Browser;
 use Illuminate\Support\Facades\Crypt;
+use Carbon\Carbon;
 class StoriesController extends Controller
 {
     /**
@@ -205,6 +206,56 @@ class StoriesController extends Controller
 
                 //return response()->success([],'Story Deleted Successfully');
                 return Redirect::to($story->link);
+            }
+        }
+        
+    }
+    public function visiting_story_secure(Request $request,$user_id,$stories_id)
+    {
+        $settings=Settings::orderBy('created_at', 'desc')->first();
+        $user=User::find($user_id);
+        if($user)
+        {
+            $story=Stories::find($stories_id);
+            if($story)
+            {
+                $link=MyLinks::where('user_id',$user_id)->where('stories_id',$stories_id)->first();
+                if(!$link)
+                {
+                    MyLinks::create(['user_id'=>$user_id, 'stories_id'=>$stories_id, 'views_count'=>1]);
+                }
+                $rate=0;
+                $platform='other';
+                if($user->level=='beginner')
+                {
+                    $rate=$settings->beginner_rate;
+                }
+                else if($user->level=='intermediate')
+                {
+                    $rate=$settings->intermediate_rate;
+                }
+                else if($user->level=='expert')
+                {
+                    $rate=$settings->expert_rate;
+                }
+                if(Browser::isMobile())
+                {
+                    $platform='mobile';
+                }
+                else if(Browser::isTablet())
+                {
+                    $platform='tablet';
+                }
+                else if(Browser::isDesktop())
+                {
+                    $platform='desktop';
+                }
+                $ip=$request->ip();
+                $browser=Browser::browserName();
+                $time=Carbon::now()->toDateString();
+                $encrypted = Crypt::encryptString($time.'_'.$user_id.'_'.$stories_id.'_'.$platform.'_'.$ip.'_'.$browser);
+
+                return Redirect::to($story->link.'?key='.$encrypted);
             }
         }
         

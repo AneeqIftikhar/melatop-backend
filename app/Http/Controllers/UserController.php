@@ -193,7 +193,9 @@ class UserController extends Controller
             }
            
             $user->update($input);
+
             $user['bank']=$user->userbanks()->first();
+            $user['token']=$request->bearerToken();
             return response()->success($user,'User Updated Successfully');
         }
         else {

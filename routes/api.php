@@ -29,6 +29,10 @@ Route::group(['middleware' => ['cors']], function () {
     Route::post('password/email', 'Auth\ForgotPasswordController@getResetToken');
     Route::post('password/reset', 'Auth\ResetPasswordController@reset');
     Route::get('visiting_story/{user_id}/{stories_id}','StoriesController@visiting_story');
+    Route::get('visiting_story_secure/{user_id}/{stories_id}','StoriesController@visiting_story_secure');
+    Route::get('visiting_story_callback/{key}','StoriesController@visiting_story_callback');
+
+
 
     Route::group(['middleware' => ['last_online']], function () { 
 
@@ -58,6 +62,7 @@ Route::group(['middleware' => ['cors']], function () {
             Route::post('add_payment' , 'AdminController@add_payment');
 
             Route::get('dummy_payments','PaymentsController@dummy_payments');
+            Route::any('settings','AdminController@settings');
         });
     });
 

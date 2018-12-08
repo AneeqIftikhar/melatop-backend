@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Melatop\User;
 use Melatop\Model\Payments;
+use Melatop\Model\Settings;
 class AdminController extends Controller
 {
     /*
@@ -136,5 +137,52 @@ class AdminController extends Controller
         {
         	return response()->fail("Not Allowed");
         }
+    }
+
+    public function settings(Request $request)
+    {
+         $user=Auth::user();
+        if($user->role=='admin')
+        {
+            if ($request->isMethod('post')) 
+            {
+                $validator = Validator::make($request->all(),  [
+                'beginner_rate' => 'required',
+                'intermediate_rate' => 'required',
+                'expert_rate' => 'required',
+                'beginner_threshold' => 'required',
+                'intermediate_threshold' => 'required',
+                'expert_threshold' => 'required',
+                'min_payment' => 'required',
+                ]);
+
+                if ($validator->fails()) {
+                    return response()->fail($validator->errors());
+                }
+                $input=$request->all();
+                $settings=Settings::first();
+                if($settings)
+                {
+                    $settings=$settings->update($input);
+                }
+                else
+                {
+                    return response()->fail("Settings Not Found");
+                }
+                 return response()->success($settings,'Settings Updated Successfully');
+            }
+            else
+            {
+                $settings=Settings::first();
+                return response()->success($settings,'Settings Updated Successfully');
+            }
+        }
+        else
+        {
+            return response()->fail("Not Allowed");
+        }
+       
+            
+        
     }
 }
