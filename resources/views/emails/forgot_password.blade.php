@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Open Canna Plans</title>
+    <title>MelaTop</title>
 
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Raleway:100,600" rel="stylesheet" type="text/css">
@@ -29,7 +29,7 @@
     <table>
         <tr>
             <td style="background-color: #4ecdc4;border-color: #4c5764;border: 2px solid #45b7af;padding: 10px;text-align: center;">
-                <a style="display: block;color: #ffffff;font-size: 12px;text-decoration: none;text-transform: uppercase;" href='http://localhost/reset?token={{$data["token"]}}&email={{$data["email"]}}'>
+                <a style="display: block;color: #ffffff;font-size: 12px;text-decoration: none;text-transform: uppercase;" href='http://melatop.dev-rec.com/reset?token={{$data["token"]}}&email={{$data["email"]}}'>
                     Click here to reset you password
                 </a>
             </td>
