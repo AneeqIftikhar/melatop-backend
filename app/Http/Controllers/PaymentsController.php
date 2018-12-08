@@ -66,7 +66,7 @@ class PaymentsController extends Controller
         $user=Auth::user();
         if($user->role=='admin')
         {
-             $payments=Payments::cron_job_payments();
+             $payments=Payments::cron_job_payments2();
             return response()->success($payments
            ,'Payments Created Successfully');
         }
