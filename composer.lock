@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "ac3e8665363eed5f0f90dccdce52f224",
+    "content-hash": "20b7713120f66675ed99e114d61d10bf",
     "packages": [
         {
             "name": "defuse/php-encryption",
@@ -724,6 +724,62 @@
                 "user-agent"
             ],
             "time": "2018-03-22T23:21:34+00:00"
+        },
+        {
+            "name": "hivokas/laravel-passport-social-grant",
+            "version": "1.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/hivokas/laravel-passport-social-grant.git",
+                "reference": "4c8246f5796d1b484daca1d1636d09f92c29711e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/hivokas/laravel-passport-social-grant/zipball/4c8246f5796d1b484daca1d1636d09f92c29711e",
+                "reference": "4c8246f5796d1b484daca1d1636d09f92c29711e",
+                "shasum": ""
+            },
+            "require": {
+                "laravel/passport": "^6.0|^7.0",
+                "php": ">=7.1"
+            },
+            "require-dev": {
+                "mockery/mockery": "^1.1",
+                "orchestra/testbench": "~3.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Hivokas\\LaravelPassportSocialGrant\\Providers\\SocialGrantServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Hivokas\\LaravelPassportSocialGrant\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Ilya Sakovich",
+                    "email": "me@hivokas.com"
+                }
+            ],
+            "description": "Social Grant for Laravel Passport",
+            "keywords": [
+                "grant",
+                "laravel",
+                "network",
+                "oauth",
+                "passport",
+                "social"
+            ],
+            "time": "2018-11-04T08:58:15+00:00"
         },
         {
             "name": "jakub-onderka/php-console-color",

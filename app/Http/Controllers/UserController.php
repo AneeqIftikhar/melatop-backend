@@ -246,7 +246,7 @@ class UserController extends Controller
         if($user->role=='admin')
         {
             $today_visits=Visits::whereDate('created_at',Carbon::today()->toDateString())->count();
-            $yesterday_visits=Visits::whereDate('created_at',Carbon::today()->toDateString())->count();
+            $yesterday_visits=Visits::whereDate('created_at',Carbon::yesterday()->toDateString())->count();
 
             $month_visits=Visits::whereYear('created_at',$Year)->whereMonth('created_at',$Month)->count();
             $prvious_month_visits=Visits::whereYear('created_at',$PreviousMonthYear)->whereMonth('created_at',$PreviousMonth)->count();
@@ -259,7 +259,7 @@ class UserController extends Controller
 
 
             $today_links=MyLinks::whereDate('created_at',Carbon::today()->toDateString())->count();
-            $yesterday_links=MyLinks::whereDate('created_at',Carbon::today()->toDateString())->count();
+            $yesterday_links=MyLinks::whereDate('created_at',Carbon::yesterday()->toDateString())->count();
 
             $month_links=MyLinks::whereYear('created_at',$Year)->whereMonth('created_at',$Month)->count();
             $previous_month_links=MyLinks::whereYear('created_at',$PreviousMonthYear)->whereMonth('created_at',$PreviousMonth)->count();
@@ -368,7 +368,7 @@ class UserController extends Controller
             $last_month_visits=$user->visits()->whereYear('created_at',$PreviousMonthYear)->whereMonth('created_at',$PreviousMonth)->count();
 
             $today_earning=$user->visits()->whereDate('created_at',Carbon::today()->toDateString())->sum('rate');
-            $yesterday_earning=$user->visits()->whereDate('created_at',Carbon::today()->toDateString())->sum('rate');
+            $yesterday_earning=$user->visits()->whereDate('created_at',Carbon::yesterday()->toDateString())->sum('rate');
 
             $month_earning=$user->visits()->whereYear('created_at',$Year)->whereMonth('created_at',$Month)->sum('rate');
 

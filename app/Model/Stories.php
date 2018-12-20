@@ -4,6 +4,7 @@ namespace Melatop\Model;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
+use Melatop\Model\SavedLinks;
 /**
  * @property int $id
  * @property string $category
@@ -21,7 +22,7 @@ class Stories extends Model
     protected $fillable = ['category', 'link', 'image', 'title', 'created_at', 'updated_at'];
 
     protected $guarded = ['id','created_by'];
-    protected $appends = ['user_link'];
+    protected $appends = ['user_link','is_saved'];
     public static function boot() {
         parent::boot();
 
@@ -37,6 +38,17 @@ class Stories extends Model
         $user=Auth::user();
         $base = config('app.url');
         return $base.'api/visiting_story/'.$user->id.'/'.$this->id;
+
+    }
+    public function getIsSavedAttribute()
+    {
+        $user=Auth::user();
+        $user_story=$user->savedLinks()->where('stories_id',$this->id)->first();
+        if($user_story)
+        {
+            return true;
+        }
+        return false;
 
     }
 }

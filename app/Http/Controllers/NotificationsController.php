@@ -117,5 +117,29 @@ class NotificationsController extends Controller
             return response()->fail("Not Allowed");
         }
     }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id)
+    {
+        $user=Auth::user();
+        if($user->role=='admin')
+        {
+            $notification=Notifications::where('id',$id)->first();
+            if($notification)
+            {
+                $notification->delete();
+                return response()->success([],'Link Deleted Successfully');
+            }
+            else
+            {
+                return response()->fail('Link Not Found');
+            }
+        }
+    }
     
 }
