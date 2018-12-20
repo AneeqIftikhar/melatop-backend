@@ -585,4 +585,16 @@ class UserController extends Controller
 
         return response()->success($result,'Dashboard Fetched Successfully');
     }
+
+    public function user($user_id)
+    {
+        $user=Auth::user();
+        if($user->role=="admin" || $user->id==$user_id)
+        {
+            $result=User::where('id',$user_id)->first();
+            $result['bank']=$result->userbanks()->first();
+            return response()->success($result,'Dashboard Fetched Successfully');
+        }
+        return response()->fail('Not Allowed');       
+    }
 }

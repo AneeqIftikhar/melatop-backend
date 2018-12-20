@@ -52,7 +52,7 @@ Route::group(['middleware' => ['cors']], function () {
             Route::post('add_update_bank_info' , 'UserBanksController@add_update_bank_info');
             Route::get('dashboard','UserController@dashboard');
             Route::post('dashboard_date','UserController@dashboard_date');
-
+            Route::get('user/{user_id}','UserController@user');
             Route::get('visits','StoriesController@get_visits');
 
 
