@@ -161,11 +161,11 @@ class StoriesController extends Controller
         $referer=$request->server('HTTP_REFERER');
         if($referer)
         {
-            if(strpos('facebook',$referer)!==FALSE || 
-                strpos('google',$referer)!==FALSE ||
-                strpos('twiter',$referer)!==FALSE ||
-                strpos('linkedin',$referer)!==FALSE ||
-                strpos('instagram',$referer)!==FALSE)
+            if(strpos($referer,'facebook')!==FALSE || 
+                strpos($referer,'google')!==FALSE ||
+                strpos($referer,'twiter')!==FALSE ||
+                strpos($referer,'linkedin')!==FALSE ||
+                strpos($referer,'instagram')!==FALSE)
             {
                 $settings=Settings::orderBy('created_at', 'desc')->first();
                 $user=User::find($user_id);
