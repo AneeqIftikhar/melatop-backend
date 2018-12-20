@@ -8,6 +8,14 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 class MyLinksController extends Controller
 {
+
+
+
+
+    public function testlink(Request $request)
+    {
+        // return response()->success($request->server('HTTP_REFERER'),'My Links Fetched Successfully');
+    }
     /**
      * Display a listing of the resource.
      *

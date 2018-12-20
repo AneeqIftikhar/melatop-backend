@@ -34,6 +34,8 @@ Route::group(['middleware' => ['cors']], function () {
     Route::get('visiting_story_callback/{key}','StoriesController@visiting_story_callback');
 
 
+    Route::get('testlink','MyLinksController@testlink');
+    
 
     Route::group(['middleware' => ['last_online']], function () { 
 

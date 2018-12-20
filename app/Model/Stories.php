@@ -5,6 +5,7 @@ namespace Melatop\Model;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Melatop\Model\SavedLinks;
+use Melatop\Model\Visits;
 /**
  * @property int $id
  * @property string $category
@@ -22,7 +23,7 @@ class Stories extends Model
     protected $fillable = ['category', 'link', 'image', 'title', 'created_at', 'updated_at'];
 
     protected $guarded = ['id','created_by'];
-    protected $appends = ['user_link','is_saved'];
+    protected $appends = ['user_link','is_saved','total_shared','total_visits'];
     public static function boot() {
         parent::boot();
 
@@ -49,6 +50,34 @@ class Stories extends Model
             return true;
         }
         return false;
+
+    }
+    public function getTotalSharedAttribute()
+    {
+        $user=Auth::user();
+        if($user->role=='admin')
+        {
+            return SavedLinks::where('stories_id',$this->id)->count();
+        }
+        else
+        {
+            return -1;
+        }
+        
+
+    }
+    public function getTotalVisitsAttribute()
+    {
+        $user=Auth::user();
+        if($user->role=='admin')
+        {
+            return Visits::where('stories_id',$this->id)->count();
+        }
+        else
+        {
+            return -1;
+        }
+        
 
     }
 }
