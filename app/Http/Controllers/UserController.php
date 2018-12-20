@@ -67,7 +67,7 @@ class UserController extends Controller
 
     }
 
-     public function login(Request $request){
+    public function login(Request $request){
 
         $validator = Validator::make($request->all(),  [
             'email' => 'required|email|max:100',
@@ -125,6 +125,75 @@ class UserController extends Controller
 
 
     }
+    public function social_login(Request $request){
+
+        $validator = Validator::make($request->all(),  [
+            'email' => 'required|email|max:100',
+            'full_name' => 'required|max:100'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->fail($validator->errors());
+        }
+
+        $user = User::get_user_from_email( request('email'));
+        if(!$user) 
+        {
+            $input = $request->all();
+            $name=explode(' ', $input['full_name']);
+            if(count($name)>0)
+            {
+                $input['first_name']= $name[0];
+                if(count($name)>1)
+                {
+                    $input['last_name']= $name[1];
+                }
+                else
+                {
+                    $input['last_name']= " ";
+                }
+            }
+            else
+            {
+                $input['first_name']= " ";
+            }
+            
+            $input['password'] = bcrypt(rand(0,10000));
+            $input['phone'] = '000000';
+            $input['status'] = 'registered';
+            $input['role'] = 'advertiser';
+            $input['level'] = 'beginner';
+            $user = User::create($input);
+            $token = $user->createToken($user->email)->accessToken;
+            $user->update(['last_online'=>Carbon::now()]);
+            $user['token']=$token;
+            $user['bank']=$user->userbanks()->first();
+            return response()->success($user,'Logged In SuccessFully');
+        }
+        else
+        {
+            if($user->status=='banned')
+            {
+                return response()->fail('User is Banned');
+            }
+            else
+            {
+                $userTokens=$user->tokens;
+                foreach($userTokens as $token) {
+                    $token->delete();
+                }
+                $token = $user->createToken($user->email)->accessToken;
+                $user->update(['last_online'=>Carbon::now()]);
+                $user['token']=$token;
+                $user['bank']=$user->userbanks()->first();
+                return response()->success($user,'Logged In SuccessFully');
+            }
+           
+        }
+
+
+    }
+    
     public function create_dummy_admin(Request $request)
     {
         

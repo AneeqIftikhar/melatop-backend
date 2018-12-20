@@ -22,6 +22,7 @@ Route::group(['middleware' => ['cors']], function () {
 
    
     Route::post('register','UserController@register');
+    Route::post('social_login','UserController@social_login');
     Route::post('login','UserController@login');
     Route::get('create_admin','UserController@create_dummy_admin');
     Route::post('change_password' , 'UserController@change_password');
