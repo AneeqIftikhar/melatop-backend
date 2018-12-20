@@ -19,9 +19,10 @@ class SocialUserResolver implements SocialUserResolverInterface
     {
         // Return the user that corresponds to provided credentials.
         // If the credentials are invalid, then return NULL.
+        $user=null;
         if($provider=='facebook')
         {
-
+            //$user=User::where()
         }
     }
 }

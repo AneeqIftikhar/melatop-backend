@@ -97,8 +97,7 @@ class NotificationsController extends Controller
     public function update_notification_status(Request $request)
     {
     	$validator = Validator::make($request->all(),  [
-            'notification_id' => 'required',
-            'description' => 'required',
+            'notification_id' => 'required'
         ]);
 
         if ($validator->fails()) {
