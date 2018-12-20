@@ -85,8 +85,8 @@ class SavedLinksController extends Controller
     public function destroy($id)
     {
         $user=Auth::user();
-        $link=SavedLinks::where('user_id',$user->id)->where('stories_id',$id)->first();
-        if($link)
+        $link=SavedLinks::where('id',$id)->first();
+        if($link && $user && $link->user_id===$user->id)
         {
             $link->delete();
             return response()->success([],'Link Deleted Successfully');
