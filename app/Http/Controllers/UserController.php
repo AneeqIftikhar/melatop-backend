@@ -272,6 +272,52 @@ class UserController extends Controller
         }       
 
     }
+    public function admin_update_user(Request $request,$user_id)
+    {
+         $validator = Validator::make($request->all(),  [
+            'first_name' => 'max:100',
+            'last_name' => 'max:100',
+            'email' => 'email|max:100',
+            'phone' => 'max:100',
+            'city' => 'max:100',
+            'image' => 'image|mimes:jpg,png,jpeg|max:2048',
+            'account' => 'max:100',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->fail($validator->errors());
+        }
+        $input=$request->all();
+        $admin=Auth::user();
+        if($admin->role=="admin")
+        {   
+            $user=User::where('id',$user_id)->first();
+            if($user) {
+                if($request->has('image'))
+                {
+                    if($name=Helper::uploadImage($request->image))
+                    {
+                        $input['image']=$name;
+                    }
+                }
+               
+                $user->update($input);
+
+                $user['bank']=$user->userbanks()->first();
+                $user['token']=$request->bearerToken();
+                return response()->success($user,'User Updated Successfully');
+            }
+            else {
+                return response()->fail("User Not Found");
+            } 
+        }
+        else
+        {
+            return response()->fail("Not Allowed");
+        }
+              
+
+    }
     public function change_password(Request $request)
     {
          $validator = Validator::make($request->all(),  [
