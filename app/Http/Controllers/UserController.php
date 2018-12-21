@@ -518,6 +518,129 @@ class UserController extends Controller
         
     }
 
+    public function get_user_dashboard($user_id)
+    {
+        $today = Carbon::today();
+        $yesterday=Carbon::yesterday();
+        $Month = $today->month;
+        $Year = $today->year;
+        $PreviousMonthYear = $Year;
+        $PreviousMonth= $Month-1;
+        $minus_seven_days=Carbon::now()->subDays(6);
+        if($PreviousMonth==0)
+        {
+            $PreviousMonth=12;
+            $PreviousMonthYear=$PreviousMonthYear-1;
+        }
+        $admin=Auth::user();
+        if($admin->role=='admin')
+        {
+            $user=User::where('id',$user_id)->first();
+            $settings=Settings::first();
+            $user_rate=0;
+            if($user->level=="beginner")
+            {
+                $user_rate=$settings->beginner_rate;
+            }
+            else if($user->level=="intermediate")
+            {
+                $user_rate=$settings->intermediate_rate;
+            }
+            else
+            {
+                $user_rate=$settings->expert_rate;
+            }
+            $today_visits=$user->visits()->whereDate('created_at',Carbon::today()->toDateString())->count();
+            $yesterday_visits=$user->visits()->whereDate('created_at',$yesterday->toDateString())->count();
+
+            $month_visits=$user->visits()->whereYear('created_at',$Year)->whereMonth('created_at',$Month)->count();
+            $last_month_visits=$user->visits()->whereYear('created_at',$PreviousMonthYear)->whereMonth('created_at',$PreviousMonth)->count();
+
+            $today_earning=$user->visits()->whereDate('created_at',Carbon::today()->toDateString())->sum('rate');
+            $yesterday_earning=$user->visits()->whereDate('created_at',Carbon::yesterday()->toDateString())->sum('rate');
+
+            $month_earning=$user->visits()->whereYear('created_at',$Year)->whereMonth('created_at',$Month)->sum('rate');
+
+            $last_month_earning=$user->visits()->whereYear('created_at',$PreviousMonthYear)->whereMonth('created_at',$PreviousMonth)->sum('rate');
+
+            $result=[];
+            $result['today_visits']=$today_visits;
+            $result['yesterday_visits']=$yesterday_visits;
+            $result['this_month_visits']=$month_visits;
+            $result['last_month_visits']=$last_month_visits;
+            $result['today_earning']=$today_earning;
+            $result['yesterday_earning']=$yesterday_earning;
+            $result['this_month_earning']=$month_earning;
+            $result['last_month_earning']=$last_month_earning;
+
+
+
+            $pending=$user->payments()->where('status','!=','paid')->get();
+            $total_balance=0;
+            foreach ($pending as $pending_payments) {
+                $total_balance=$total_balance+$pending_payments->amount;
+            }
+
+            $result['balance']=$total_balance;
+
+            $desktop=$user->visits()->whereDate('created_at',Carbon::today()->toDateString())->where('platform','desktop')->count();
+            $mobile=$user->visits()->whereDate('created_at',Carbon::today()->toDateString())->where('platform','mobile')->count();
+            $tablet=$user->visits()->whereDate('created_at',Carbon::today()->toDateString())->where('platform','tablet')->count();
+            $other=$user->visits()->whereDate('created_at',Carbon::today()->toDateString())->where('platform','other')->count();
+
+            $result['today_desktop']=$desktop;
+            $result['today_mobile']=$mobile;
+            $result['today_tablet']=$tablet;
+            $result['today_other']=$other;
+            $result['today_total']=$tablet+$mobile+$desktop+$other;
+
+            
+
+            $weekly = DB::table('visits')
+                 ->select(DB::raw('DATE(created_at) as date'), DB::raw('count(*) as total'))
+                 ->where('created_at','<=',$today)
+                 ->where('created_at','>=',$minus_seven_days)
+                 ->where('user_id',$user->id)
+                 ->groupBy(DB::raw('DATE(created_at)'))
+                 ->get();
+            $weekly_summary=[];
+            $j=0;
+            for($i=0;$i<7;$i++)
+            {
+                if($j<count($weekly))
+                {
+                    $val=$weekly[$j];
+                    if($val->date === Carbon::now()->subDays(6-$i)->format('Y-m-d'))
+                    {
+                        $weekly_summary[$i] = $val->total; 
+                        $j++;
+                    }
+                    else
+                    {
+                        $weekly_summary[$i] =0;
+
+                    }
+                }
+                else
+                {
+                    $weekly_summary[$i] =0;
+
+                }
+                
+                
+            }
+            $result['weekly_summary']=$weekly_summary;
+            //Carbon::createFromFormat('Y-m-d', '1975-05-21')->toDateTimeString();
+           
+
+            return response()->success($result,'User Dashboard Fetched Successfully');
+        }
+        else
+        {
+            return response()->fail('Not Allowed');
+        }
+        
+    }
     public function dashboard_date(Request $request)
     {
         $input=$request->all();
