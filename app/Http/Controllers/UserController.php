@@ -687,6 +687,76 @@ class UserController extends Controller
         }
         
     }
+    public function get_user_dashboard_date(Request $request)
+    {
+        $input=$request->all();
+        $month_visits=0;
+        $admin=Auth::user();
+        if($admin->role=='admin')
+        {
+            $user=User::where('id',$input['user_id'])->first();
+            if($input['duration']=='today')
+            {
+                $today = Carbon::today()->toDateString();
+                
+
+                $month_visits=$user->visits()->whereDate('created_at',$today)->sum('rate');
+                $month_clicks=$user->visits()->whereDate('created_at',$today)->count();
+
+                $links=$user->mylinks()->whereDate('created_at',$today)->count();
+
+            }
+            else if($input['duration']=='yesterday')
+            {
+                $yesterday=Carbon::yesterday()->toDateString();
+                $month_visits=$user->visits()->whereDate('created_at',$yesterday)->sum('rate');
+                $month_clicks=$user->visits()->whereDate('created_at',$yesterday)->count();
+                 $links=$user->mylinks()->whereDate('created_at',$yesterday)->count();
+            }
+            else if($input['duration']=='this_month')
+            {
+                $today = Carbon::today();
+                $Month = $today->month;
+                $Year = $today->year;
+                $month_visits=$user->visits()->whereYear('created_at',$Year)->whereMonth('created_at',$Month)->sum('rate');
+                $month_clicks=$user->visits()->whereYear('created_at',$Year)->whereMonth('created_at',$Month)->count();
+
+                 $links=$user->mylinks()->whereYear('created_at',$Year)->whereMonth('created_at',$Month)->count();
+            }
+            else if($input['duration']=='last_month')
+            {
+                $today = Carbon::today();
+                $Month = $today->month;
+                $Year = $today->year;
+                if($Month==1)
+                {
+                    $Month=12;
+                    $Year=$Year-1;
+                }
+                else
+                {
+                    $Month =$Month -1;
+                    $month_visits=$user->visits()->whereYear('created_at',$Year)->whereMonth('created_at',$Month)->sum('rate');
+                }
+                $month_clicks=$user->visits()->whereYear('created_at',$Year)->whereMonth('created_at',$Month)->count();
+
+                $links=$user->mylinks()->whereYear('created_at',$Year)->whereMonth('created_at',$Month)->count();
+
+            }
+
+            $result=[];
+            $result['earnings']=$month_visits;
+            $result['visits']=$month_clicks;
+            $result['links_shared']=$links;
+
+            return response()->success($result,'Dashboard Fetched Successfully');
+        }
+        else
+        {
+            return response()->fail('Not Allowed');
+        }
+        
+    }
     public function dashboard_date(Request $request)
     {
         $input=$request->all();

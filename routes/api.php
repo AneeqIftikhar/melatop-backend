@@ -67,6 +67,7 @@ Route::group(['middleware' => ['cors']], function () {
             Route::get('dummy_payments','PaymentsController@dummy_payments');
             Route::any('settings','AdminController@settings');
             Route::get('get_user_dashboard/{user_id}','UserController@get_user_dashboard');
+            Route::post('get_user_dashboard_date','UserController@get_user_dashboard_date');
             Route::post('admin_update_user/{user_id}','UserController@admin_update_user');
             
 
