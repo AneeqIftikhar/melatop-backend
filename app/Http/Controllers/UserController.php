@@ -360,10 +360,10 @@ class UserController extends Controller
         $user=Auth::user();
         if($user->role=='admin')
         {
-            $today_visits=Visits::whereDate('created_at',Carbon::today()->toDateString())->count();
+            $today_visits=Visits::whereDate('created_at',Carbon::today()->toDateString())->where('created_at', '<=', Carbon::now()->subHours(1))->count();
             $yesterday_visits=Visits::whereDate('created_at',Carbon::yesterday()->toDateString())->count();
 
-            $month_visits=Visits::whereYear('created_at',$Year)->whereMonth('created_at',$Month)->count();
+            $month_visits=Visits::whereYear('created_at',$Year)->whereMonth('created_at',$Month)->where('created_at', '<=', Carbon::now()->subHours(1))->count();
             $prvious_month_visits=Visits::whereYear('created_at',$PreviousMonthYear)->whereMonth('created_at',$PreviousMonth)->count();
 
             $result=[];
@@ -373,10 +373,10 @@ class UserController extends Controller
             $result['prvious_month_visits']=$prvious_month_visits;
 
 
-            $today_links=MyLinks::whereDate('created_at',Carbon::today()->toDateString())->count();
+            $today_links=MyLinks::whereDate('created_at',Carbon::today()->toDateString())->where('created_at', '<=', Carbon::now()->subHours(1))->count();
             $yesterday_links=MyLinks::whereDate('created_at',Carbon::yesterday()->toDateString())->count();
 
-            $month_links=MyLinks::whereYear('created_at',$Year)->whereMonth('created_at',$Month)->count();
+            $month_links=MyLinks::whereYear('created_at',$Year)->whereMonth('created_at',$Month)->where('created_at', '<=', Carbon::now()->subHours(1))->count();
             $previous_month_links=MyLinks::whereYear('created_at',$PreviousMonthYear)->whereMonth('created_at',$PreviousMonth)->count();
 
             $result['today_links']=$today_links;
@@ -476,16 +476,16 @@ class UserController extends Controller
             {
                 $user_rate=$settings->expert_rate;
             }
-            $today_visits=$user->visits()->whereDate('created_at',Carbon::today()->toDateString())->count();
+            $today_visits=$user->visits()->whereDate('created_at',Carbon::today()->toDateString())->where('created_at', '<=', Carbon::now()->subHours(1))->count();
             $yesterday_visits=$user->visits()->whereDate('created_at',$yesterday->toDateString())->count();
 
-            $month_visits=$user->visits()->whereYear('created_at',$Year)->whereMonth('created_at',$Month)->count();
+            $month_visits=$user->visits()->whereYear('created_at',$Year)->whereMonth('created_at',$Month)->where('created_at', '<=', Carbon::now()->subHours(1))->count();
             $last_month_visits=$user->visits()->whereYear('created_at',$PreviousMonthYear)->whereMonth('created_at',$PreviousMonth)->count();
 
-            $today_earning=$user->visits()->whereDate('created_at',Carbon::today()->toDateString())->sum('rate');
+            $today_earning=$user->visits()->whereDate('created_at',Carbon::today()->toDateString())->where('created_at', '<=', Carbon::now()->subHours(1))->sum('rate');
             $yesterday_earning=$user->visits()->whereDate('created_at',Carbon::yesterday()->toDateString())->sum('rate');
 
-            $month_earning=$user->visits()->whereYear('created_at',$Year)->whereMonth('created_at',$Month)->sum('rate');
+            $month_earning=$user->visits()->whereYear('created_at',$Year)->whereMonth('created_at',$Month)->where('created_at', '<=', Carbon::now()->subHours(1))->sum('rate');
 
             $last_month_earning=$user->visits()->whereYear('created_at',$PreviousMonthYear)->whereMonth('created_at',$PreviousMonth)->sum('rate');
 
@@ -509,10 +509,10 @@ class UserController extends Controller
 
             $result['balance']=$total_balance;
 
-            $desktop=$user->visits()->whereDate('created_at',Carbon::today()->toDateString())->where('platform','desktop')->count();
-            $mobile=$user->visits()->whereDate('created_at',Carbon::today()->toDateString())->where('platform','mobile')->count();
-            $tablet=$user->visits()->whereDate('created_at',Carbon::today()->toDateString())->where('platform','tablet')->count();
-            $other=$user->visits()->whereDate('created_at',Carbon::today()->toDateString())->where('platform','other')->count();
+            $desktop=$user->visits()->whereDate('created_at',Carbon::today()->toDateString())->where('created_at', '<=', Carbon::now()->subHours(1))->where('platform','desktop')->count();
+            $mobile=$user->visits()->whereDate('created_at',Carbon::today()->toDateString())->where('created_at', '<=', Carbon::now()->subHours(1))->where('platform','mobile')->count();
+            $tablet=$user->visits()->whereDate('created_at',Carbon::today()->toDateString())->where('created_at', '<=', Carbon::now()->subHours(1))->where('platform','tablet')->count();
+            $other=$user->visits()->whereDate('created_at',Carbon::today()->toDateString())->where('created_at', '<=', Carbon::now()->subHours(1))->where('platform','other')->count();
 
             $result['today_desktop']=$desktop;
             $result['today_mobile']=$mobile;
@@ -596,10 +596,10 @@ class UserController extends Controller
             {
                 $user_rate=$settings->expert_rate;
             }
-            $today_visits=$user->visits()->whereDate('created_at',Carbon::today()->toDateString())->count();
+            $today_visits=$user->visits()->whereDate('created_at',Carbon::today()->toDateString())->where('created_at', '<=', Carbon::now()->subHours(1))->count();
             $yesterday_visits=$user->visits()->whereDate('created_at',$yesterday->toDateString())->count();
 
-            $month_visits=$user->visits()->whereYear('created_at',$Year)->whereMonth('created_at',$Month)->count();
+            $month_visits=$user->visits()->whereYear('created_at',$Year)->whereMonth('created_at',$Month)->where('created_at', '<=', Carbon::now()->subHours(1))->count();
             $last_month_visits=$user->visits()->whereYear('created_at',$PreviousMonthYear)->whereMonth('created_at',$PreviousMonth)->count();
 
             $today_earning=$user->visits()->whereDate('created_at',Carbon::today()->toDateString())->sum('rate');
@@ -629,10 +629,10 @@ class UserController extends Controller
 
             $result['balance']=$total_balance;
 
-            $desktop=$user->visits()->whereDate('created_at',Carbon::today()->toDateString())->where('platform','desktop')->count();
-            $mobile=$user->visits()->whereDate('created_at',Carbon::today()->toDateString())->where('platform','mobile')->count();
-            $tablet=$user->visits()->whereDate('created_at',Carbon::today()->toDateString())->where('platform','tablet')->count();
-            $other=$user->visits()->whereDate('created_at',Carbon::today()->toDateString())->where('platform','other')->count();
+            $desktop=$user->visits()->whereDate('created_at',Carbon::today()->toDateString())->where('created_at', '<=', Carbon::now()->subHours(1))->where('platform','desktop')->count();
+            $mobile=$user->visits()->whereDate('created_at',Carbon::today()->toDateString())->where('created_at', '<=', Carbon::now()->subHours(1))->where('platform','mobile')->count();
+            $tablet=$user->visits()->whereDate('created_at',Carbon::today()->toDateString())->where('created_at', '<=', Carbon::now()->subHours(1))->where('platform','tablet')->count();
+            $other=$user->visits()->whereDate('created_at',Carbon::today()->toDateString())->where('created_at', '<=', Carbon::now()->subHours(1))->where('platform','other')->count();
 
             $result['today_desktop']=$desktop;
             $result['today_mobile']=$mobile;
@@ -646,6 +646,7 @@ class UserController extends Controller
                  ->select(DB::raw('DATE(created_at) as date'), DB::raw('count(*) as total'))
                  ->where('created_at','<=',$today)
                  ->where('created_at','>=',$minus_seven_days)
+                 ->where('created_at', '<=', Carbon::now()->subHours(1))
                  ->where('user_id',$user->id)
                  ->groupBy(DB::raw('DATE(created_at)'))
                  ->get();
@@ -700,10 +701,10 @@ class UserController extends Controller
                 $today = Carbon::today()->toDateString();
                 
 
-                $month_visits=$user->visits()->whereDate('created_at',$today)->sum('rate');
-                $month_clicks=$user->visits()->whereDate('created_at',$today)->count();
+                $month_visits=$user->visits()->whereDate('created_at',$today)->where('created_at', '<=', Carbon::now()->subHours(1))->sum('rate');
+                $month_clicks=$user->visits()->whereDate('created_at',$today)->where('created_at', '<=', Carbon::now()->subHours(1))->count();
 
-                $links=$user->mylinks()->whereDate('created_at',$today)->count();
+                $links=$user->mylinks()->whereDate('created_at',$today)->where('created_at', '<=', Carbon::now()->subHours(1))->count();
 
             }
             else if($input['duration']=='yesterday')
@@ -718,10 +719,10 @@ class UserController extends Controller
                 $today = Carbon::today();
                 $Month = $today->month;
                 $Year = $today->year;
-                $month_visits=$user->visits()->whereYear('created_at',$Year)->whereMonth('created_at',$Month)->sum('rate');
-                $month_clicks=$user->visits()->whereYear('created_at',$Year)->whereMonth('created_at',$Month)->count();
+                $month_visits=$user->visits()->whereYear('created_at',$Year)->whereMonth('created_at',$Month)->where('created_at', '<=', Carbon::now()->subHours(1))->sum('rate');
+                $month_clicks=$user->visits()->whereYear('created_at',$Year)->where('created_at', '<=', Carbon::now()->subHours(1))->whereMonth('created_at',$Month)->count();
 
-                 $links=$user->mylinks()->whereYear('created_at',$Year)->whereMonth('created_at',$Month)->count();
+                 $links=$user->mylinks()->whereYear('created_at',$Year)->whereMonth('created_at',$Month)->where('created_at', '<=', Carbon::now()->subHours(1))->count();
             }
             else if($input['duration']=='last_month')
             {
@@ -767,10 +768,10 @@ class UserController extends Controller
             $today = Carbon::today()->toDateString();
             
 
-            $month_visits=$user->visits()->whereDate('created_at',$today)->sum('rate');
-            $month_clicks=$user->visits()->whereDate('created_at',$today)->count();
+            $month_visits=$user->visits()->whereDate('created_at',$today)->where('created_at', '<=', Carbon::now()->subHours(1))->sum('rate');
+            $month_clicks=$user->visits()->whereDate('created_at',$today)->where('created_at', '<=', Carbon::now()->subHours(1))->count();
 
-            $links=$user->mylinks()->whereDate('created_at',$today)->count();
+            $links=$user->mylinks()->whereDate('created_at',$today)->where('created_at', '<=', Carbon::now()->subHours(1))->count();
 
         }
         else if($input['duration']=='yesterday')
@@ -785,10 +786,10 @@ class UserController extends Controller
             $today = Carbon::today();
             $Month = $today->month;
             $Year = $today->year;
-            $month_visits=$user->visits()->whereYear('created_at',$Year)->whereMonth('created_at',$Month)->sum('rate');
-            $month_clicks=$user->visits()->whereYear('created_at',$Year)->whereMonth('created_at',$Month)->count();
+            $month_visits=$user->visits()->whereYear('created_at',$Year)->whereMonth('created_at',$Month)->where('created_at', '<=', Carbon::now()->subHours(1))->sum('rate');
+            $month_clicks=$user->visits()->whereYear('created_at',$Year)->whereMonth('created_at',$Month)->where('created_at', '<=', Carbon::now()->subHours(1))->count();
 
-             $links=$user->mylinks()->whereYear('created_at',$Year)->whereMonth('created_at',$Month)->count();
+             $links=$user->mylinks()->whereYear('created_at',$Year)->whereMonth('created_at',$Month)->where('created_at', '<=', Carbon::now()->subHours(1))->count();
         }
         else if($input['duration']=='last_month')
         {

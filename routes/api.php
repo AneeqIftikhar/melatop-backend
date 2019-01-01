@@ -33,6 +33,8 @@ Route::group(['middleware' => ['cors']], function () {
     Route::get('visiting_story_secure/{user_id}/{stories_id}','StoriesController@visiting_story_secure');
     Route::get('visiting_story_callback/{key}','StoriesController@visiting_story_callback');
 
+    Route::post('add_stories','StoriesController@add_stories');
+
 
     Route::get('testlink','MyLinksController@testlink');
     

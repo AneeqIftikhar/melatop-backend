@@ -286,66 +286,82 @@ class StoriesController extends Controller
     }
     public function visiting_story_secure(Request $request,$user_id,$stories_id)
     {
-        $settings=Settings::orderBy('created_at', 'desc')->first();
-        $user=User::find($user_id);
-        if($user)
+        $referer=$request->server('HTTP_REFERER');
+        if($referer)
         {
-            $story=Stories::find($stories_id);
-            if($story)
+            if(strpos($referer,'facebook')!==FALSE || 
+                strpos($referer,'google')!==FALSE ||
+                strpos($referer,'twiter')!==FALSE ||
+                strpos($referer,'linkedin')!==FALSE ||
+                strpos($referer,'instagram')!==FALSE)
             {
-                $link=MyLinks::where('user_id',$user_id)->where('stories_id',$stories_id)->first();
-                if(!$link)
+                $settings=Settings::orderBy('created_at', 'desc')->first();
+                $user=User::find($user_id);
+                if($user)
                 {
-                    MyLinks::create(['user_id'=>$user_id, 'stories_id'=>$stories_id, 'views_count'=>1]);
-                }
-                $rate=0;
-                $platform='other';
-                if($user->level=='beginner')
-                {
-                    $rate=$settings->beginner_rate;
-                }
-                else if($user->level=='intermediate')
-                {
-                    $rate=$settings->intermediate_rate;
-                }
-                else if($user->level=='expert')
-                {
-                    $rate=$settings->expert_rate;
-                }
-                if(Browser::isMobile())
-                {
-                    $platform='mobile';
-                }
-                else if(Browser::isTablet())
-                {
-                    $platform='tablet';
-                }
-                else if(Browser::isDesktop())
-                {
-                    $platform='desktop';
-                }
-                $ip=$request->ip();
-                $browser=Browser::browserName();
-                $time=Carbon::now()->toDateString();
-                $encrypted = Crypt::encryptString($time.'_'.$user_id.'_'.$stories_id.'_'.$platform.'_'.$ip.'_'.$browser);
+                    $story=Stories::find($stories_id);
+                    if($story)
+                    {
+                        $link=MyLinks::where('user_id',$user_id)->where('stories_id',$stories_id)->first();
+                        if(!$link)
+                        {
+                            MyLinks::create(['user_id'=>$user_id, 'stories_id'=>$stories_id, 'views_count'=>1]);
+                        }
+                        $rate=0;
+                        $platform='other';
+                        if($user->level=='beginner')
+                        {
+                            $rate=$settings->beginner_rate;
+                        }
+                        else if($user->level=='intermediate')
+                        {
+                            $rate=$settings->intermediate_rate;
+                        }
+                        else if($user->level=='expert')
+                        {
+                            $rate=$settings->expert_rate;
+                        }
+                        if(Browser::isMobile())
+                        {
+                            $platform='mobile';
+                        }
+                        else if(Browser::isTablet())
+                        {
+                            $platform='tablet';
+                        }
+                        else if(Browser::isDesktop())
+                        {
+                            $platform='desktop';
+                        }
+                        $ip=$request->ip();
+                        $browser=Browser::browserName();
+                        $time=Carbon::now()->toDateTimeString();
+                        $encrypted = Crypt::encryptString($time.'_'.$user_id.'_'.$stories_id.'_'.$platform.'_'.$ip.'_'.$browser);
 
-                return Redirect::to($story->link.'?key='.$encrypted);
+                        return Redirect::to($story->link.'?key='.$encrypted);
+                    }
+                }
             }
+        }
+        $story=Stories::find($stories_id);
+        if($story)
+        {
+            return Redirect::to($story->link);
         }
         
     }
     public function visiting_story_callback(Request $request,$key)
     {   
 
-        //$encrypted = Crypt::encryptString('Hello world.');
-
-        //$decrypted = Crypt::decryptString($encrypted);
-
         $key_parse = Crypt::decryptString($key);
         $key_parse = explode('_', $key_parse);
         if(count($key_parse)==6)
         {
-            $time=$key_parse[0];
+            $time_difference=Carbon::parse($key_parse[0])->diffInSeconds(Carbon::now());
+            if($time_difference>=30)
+            {
+                return response()->fail('Time Requirement Not Met');
+            }
             $user_id=$key_parse[1];
             $stories_id=$key_parse[2];
             $platform = $key_parse[3];

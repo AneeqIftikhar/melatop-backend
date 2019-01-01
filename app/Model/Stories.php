@@ -39,7 +39,7 @@ class Stories extends Model
     {
         $user=Auth::user();
         $base = config('app.url');
-        return $base.'api/visiting_story/'.$user->id.'/'.$this->id;
+        return $base.'api/visiting_story_secure/'.$user->id.'/'.$this->id;
 
     }
     public function getIsSavedAttribute()
