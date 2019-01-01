@@ -53,35 +53,44 @@ class NotificationsController extends Controller
 			{
 				if($input['send_to']=='all')
 	            {   	
-	            	$users=User::all();            	
+	            	$users=User::where('role','!=','admin')->get();            	
 	            }
 	            else if($input['send_to']=='active')
 	            {
-	            	$users=User::where('status','active')->get();
+	            	$users=User::where('role','!=','admin')->where('status','active')->get();
 	            }
 	            else if($input['send_to']=='beginner')
 	            {
-	            	$users=User::where('level','beginner')->get();
+	            	$users=User::where('role','!=','admin')->where('level','beginner')->get();
 	            }
 	            else if($input['send_to']=='intermediate')
 	            {
-	            	$users=User::where('level','intermediate')->get();
+	            	$users=User::where('role','!=','admin')->where('level','intermediate')->get();
 	            }
 	            else if($input['send_to']=='expert')
 	            {
-	            	$users=User::where('level','expert')->get();
+	            	$users=User::where('role','!=','admin')->where('level','expert')->get();
 	            }
 			}
 			if(count($users)>0)
 			{
+                $now = Carbon::now();
+                $unique_code = $now->format('YmdHisu');
 				$all = array();
 				foreach ($users as $user) {
-					$row=['title'=>$input['title'],'description'=>$input['description'],'type'=>$input['type'],'user_id'=>$user->id,'status'=>'unread','created_at'=> Carbon::now()];
+					$row=['title'=>$input['title'],'description'=>$input['description'],'type'=>$input['type'],'user_id'=>$user->id,'status'=>'unread','created_at'=> Carbon::now(),'delete_key'=>$unique_code];
 					array_push($all,$row);
 				}
-
 				$notifications=Notifications::insert($all);
-				return response()->success($notifications,'Notifications Sent Successfully');
+
+                $all = [];
+                $users=User::where('role','admin')->get();
+                foreach ($users as $user) {
+                    $row=['title'=>$input['title'],'description'=>$input['description'],'type'=>$input['type'],'user_id'=>$user->id,'status'=>'unread','created_at'=> Carbon::now(),'delete_key'=>$unique_code];
+                    array_push($all,$row);
+                }
+                $notifications=Notifications::insert($all);
+				return response()->success([],'Notifications Sent Successfully');
 			}
 			return response()->fail('No User');
 			
@@ -131,8 +140,9 @@ class NotificationsController extends Controller
             $notification=Notifications::where('id',$id)->first();
             if($notification)
             {
-                $notification->delete();
-                return response()->success([],'Link Deleted Successfully');
+                $deletedRows = Notifications::where('delete_key',$notification->delete_key)->delete();
+                // $notification->delete();
+                return response()->success([],'Notifications Deleted Successfully');
             }
             else
             {

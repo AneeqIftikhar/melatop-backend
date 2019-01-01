@@ -109,7 +109,63 @@ class StoriesController extends Controller
         }
         
     }
+    public function add_stories(Request $request)
+    {
+        
+            $validator = Validator::make($request->all(),  [
+                'link' => 'required|max:255',
+            ]);
 
+            if ($validator->fails()) {
+                return response()->fail($validator->errors());
+            }
+            $input = $request->all();
+            $tags = get_meta_tags($input['link']);
+            $title = "";
+            $description = "";
+            $img = "";
+            $category="";
+            if(isset($tags["title"])){
+                $title = $tags["title"];
+            }
+
+            if(isset($tags["twitter:title"])){
+                $title = $tags["twitter:title"];
+            }
+
+            if(isset($tags["description"])){
+                $description = $tags["description"];
+            }
+
+            if(isset($tags["twitter:description"])){
+                $description = $tags["twitter:description"];
+            }
+
+            if(isset($tags["twitter:image:src"]))
+            {
+                $img = $tags["twitter:image:src"];
+            }
+            else if(isset($tags["twitter:image"]))
+            {
+                $img = $tags["twitter:image"];
+            }
+
+            if(isset($tags["category"]))
+            {
+                $category = $tags["category"];
+            }else{
+                $category= "Undefined";
+            }
+
+            $input['image']=$img;
+            $input['title']=$title;
+
+            $input['category']= $category;
+            
+            $stories = Stories::create($input);
+            return response()->success($stories,'Story Created Successfully');
+        
+    }
     /**
      * Display the specified resource.
      *

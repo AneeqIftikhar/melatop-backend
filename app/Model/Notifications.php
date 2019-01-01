@@ -8,7 +8,7 @@ class Notifications extends Model
 {
    
 	protected $appends = ['time_passed'];
-    protected $fillable = ['user_id', 'title', 'description','type','status', 'created_at', 'updated_at'];
+    protected $fillable = ['user_id', 'title', 'description','type','status', 'created_at', 'updated_at','delete_key'];
 
 
     
