@@ -99,7 +99,7 @@ class StoriesController extends Controller
             $input['title']=$title;
 
             $input['category']= $category;
-            
+            $input['created_by']=$user->id;
             $stories = Stories::create($input);
             return response()->success($stories,'Story Created Successfully');
         }
@@ -162,8 +162,8 @@ class StoriesController extends Controller
 
             $input['category']= $category;
             
-            $stories = Stories::create($input);
-            return response()->success($stories,'Story Created Successfully');
+            Stories::create($input);
+            return response()->success([],'Story Created Successfully');
         
     }
     /**
