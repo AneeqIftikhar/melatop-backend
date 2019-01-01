@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Melatop\Model\SavedLinks;
 use Melatop\Model\Visits;
+use Carbon\Carbon;
 /**
  * @property int $id
  * @property string $category
@@ -23,7 +24,7 @@ class Stories extends Model
     protected $fillable = ['category', 'link', 'image', 'title', 'created_at', 'updated_at'];
 
     protected $guarded = ['id','created_by'];
-    protected $appends = ['user_link','is_saved','total_shared','total_visits'];
+    protected $appends = ['user_link','is_saved','total_shared','total_visits','time_ago'];
     public static function boot() {
         parent::boot();
 
@@ -79,5 +80,13 @@ class Stories extends Model
         }
         
 
+    }
+    public function getTimeAgoAttribute()
+    {
+        if($this->created_at)
+        {
+           return Carbon::parse($this->created_at)->diffForHumans();
+        }
+        return null;
     }
 }

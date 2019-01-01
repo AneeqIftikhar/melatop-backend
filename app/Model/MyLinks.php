@@ -3,7 +3,7 @@
 namespace Melatop\Model;
 
 use Illuminate\Database\Eloquent\Model;
-
+use Carbon\Carbon;
 /**
  * @property int $id
  * @property int $user_id
@@ -27,6 +27,7 @@ class MyLinks extends Model
      * @var array
      */
     protected $fillable = ['user_id', 'stories_id', 'views_count', 'created_at', 'updated_at'];
+    protected $appends = ['time_ago'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -42,5 +43,13 @@ class MyLinks extends Model
     public function user()
     {
         return $this->belongsTo('Melatop\User');
+    }
+    public function getTimeAgoAttribute()
+    {
+        if($this->created_at)
+        {
+           return Carbon::parse($this->created_at)->diffForHumans();
+        }
+        return null;
     }
 }
