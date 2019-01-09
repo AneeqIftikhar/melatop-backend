@@ -342,7 +342,121 @@ class UserController extends Controller
         }
 
     }
+    public function monthly_performance(Request $request)
+    {
+         $validator = Validator::make($request->all(),  [
+            'user_id' => 'required',
+            'month' => 'required',
+            
+        ]);
 
+        if ($validator->fails()) {
+            return response()->fail($validator->errors());
+        }
+        $admin=Auth::user();
+        $input=$request->all();
+        if($admin->role=='admin')
+        {
+            $Month = $input['month'];
+            $user= User::where('id',$input['user_id'])->first();
+            $today = Carbon::today();
+            if($Month<$today->month)
+            {
+                $Year=$today->year;
+            }
+            else
+            {
+                $Year=($today->year)-1;
+            }
+           
+
+
+            $vistors_earned = DB::table('visits')
+                 ->select(DB::raw('DATE(created_at) as date'), DB::raw('sum(rate) as earning'), DB::raw('count(*) as visitor'))
+                 ->whereYear('created_at','=',$Year)
+                 ->whereMonth('created_at','=',$Month)
+                 ->where('user_id',$user->id)
+                 ->groupBy(DB::raw('DATE(created_at)'))
+                 ->get();
+
+            $monthly_shared = DB::table('links')
+                 ->select(DB::raw('DATE(created_at) as date'), DB::raw('count(*) as shared'))
+                 ->whereYear('created_at','=',$Year)
+                 ->whereMonth('created_at','=',$Month)
+                 ->where('user_id',$user->id)
+                 ->groupBy(DB::raw('DATE(created_at)'))
+                 ->get();
+            $summary=[];
+            $j=0;
+            $k=0;
+            $date = Carbon::create($Year, $Month, 1, 0, 0, 0);
+            
+            for($i=0;$i<$date->daysInMonth;$i++)
+            {
+                $date = Carbon::create($Year, $Month, 1, 0, 0, 0);
+                $day=$date->addDays($i)->format('Y-m-d');
+                $day_result=[];
+                if($j<count($vistors_earned))
+                {
+                    $val=$vistors_earned[$j];
+
+                    if($val->date === $day)
+                    {
+                        $day_result['day']=$day;
+                        $day_result['visitor_count']=$val->visitor;
+                        $day_result['earning']=$val->earning;
+
+                        $j++;
+                    }
+                    else
+                    {
+                        $day_result['day']=$day;
+                        $day_result['visitor_count']=0;
+                        $day_result['earning']=0;
+                        
+
+                    }
+                }
+                else
+                {
+                    $day_result['day']=$day;
+                    $day_result['visitor_count']=0;
+                    $day_result['earning']=0;
+                    
+                }
+                if($k<count($monthly_shared))
+                {
+                    $val=$monthly_shared[$k];
+
+                    if($val->date == $day)
+                    {
+                        $day_result['shared_count']=$val->shared;
+                        $k++;
+                    }
+                    else
+                    {
+                        $day_result['shared_count']=0;
+                    }
+                }
+                else
+                {
+                        $day_result['shared_count']=0;
+                    
+                }
+                array_push($summary,$day_result);
+                
+                
+            }
+            $result=$summary;
+
+            
+
+            // $result=['vistors_earned'=>$vistors_earned,'links_shared'=>$monthly_shared];
+            return response()->success($result,'Password Updated Successfully');
+        }
+
+
+    }
     public function dashboard(Request $request)
     {
         $today = Carbon::today();

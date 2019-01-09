@@ -71,6 +71,7 @@ Route::group(['middleware' => ['cors']], function () {
             Route::get('get_user_dashboard/{user_id}','UserController@get_user_dashboard');
             Route::post('get_user_dashboard_date','UserController@get_user_dashboard_date');
             Route::post('admin_update_user/{user_id}','UserController@admin_update_user');
+            Route::post('monthly_performance','UserController@monthly_performance');
             
 
         });
