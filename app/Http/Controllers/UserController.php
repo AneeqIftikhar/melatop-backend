@@ -590,7 +590,7 @@ class UserController extends Controller
             {
                 $user_rate=$settings->expert_rate;
             }
-            $today_visits=$user->visits()->whereDate('created_at',Carbon::today()->toDateString())->where('created_at', '<=', Carbon::now()->subMinutes(5))->count();
+            $today_visits=$user->visits()->whereDate('created_at',Carbon::today()->toDateString())->where('created_at', '<=', Carbon::now()->subHours(1))->count();
             $yesterday_visits=$user->visits()->whereDate('created_at',$yesterday->toDateString())->count();
 
             $month_visits=$user->visits()->whereYear('created_at',$Year)->whereMonth('created_at',$Month)->where('created_at', '<=', Carbon::now()->subHours(1))->count();
@@ -638,7 +638,7 @@ class UserController extends Controller
 
             $weekly = DB::table('visits')
                  ->select(DB::raw('DATE(created_at) as date'), DB::raw('count(*) as total'))
-                 ->where('created_at','<=',$today)
+                 ->where('created_at','<=',Carbon::now()->subHours(1))
                  ->where('created_at','>=',$minus_seven_days)
                  ->where('user_id',$user->id)
                  ->groupBy(DB::raw('DATE(created_at)'))
@@ -758,9 +758,8 @@ class UserController extends Controller
 
             $weekly = DB::table('visits')
                  ->select(DB::raw('DATE(created_at) as date'), DB::raw('count(*) as total'))
-                 ->where('created_at','<=',$today)
+                 ->where('created_at','<=',Carbon::now()->subHours(1))
                  ->where('created_at','>=',$minus_seven_days)
-                 ->where('created_at', '<=', Carbon::now()->subHours(1))
                  ->where('user_id',$user->id)
                  ->groupBy(DB::raw('DATE(created_at)'))
                  ->get();
