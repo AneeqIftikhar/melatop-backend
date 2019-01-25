@@ -358,7 +358,7 @@ class StoriesController extends Controller
         if(count($key_parse)==6)
         {
             $time_difference=Carbon::parse($key_parse[0])->diffInSeconds(Carbon::now());
-            if($time_difference>=30)
+            if($time_difference<30)
             {
                 return response()->fail('Time Requirement Not Met');
             }
