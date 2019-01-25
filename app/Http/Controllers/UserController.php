@@ -344,7 +344,7 @@ class UserController extends Controller
     }
     public function monthly_performance(Request $request)
     {
-         $validator = Validator::make($request->all(),  [
+        $validator = Validator::make($request->all(),  [
             'user_id' => 'required',
             'month' => 'required',
             
@@ -360,7 +360,7 @@ class UserController extends Controller
             $Month = $input['month'];
             $user= User::where('id',$input['user_id'])->first();
             $today = Carbon::today();
-            if($Month<$today->month)
+            if($Month<=$today->month)
             {
                 $Year=$today->year;
             }
@@ -590,7 +590,7 @@ class UserController extends Controller
             {
                 $user_rate=$settings->expert_rate;
             }
-            $today_visits=$user->visits()->whereDate('created_at',Carbon::today()->toDateString())->where('created_at', '<=', Carbon::now()->subHours(1))->count();
+            $today_visits=$user->visits()->whereDate('created_at',Carbon::today()->toDateString())->where('created_at', '<=', Carbon::now()->subMinutes(5))->count();
             $yesterday_visits=$user->visits()->whereDate('created_at',$yesterday->toDateString())->count();
 
             $month_visits=$user->visits()->whereYear('created_at',$Year)->whereMonth('created_at',$Month)->where('created_at', '<=', Carbon::now()->subHours(1))->count();
